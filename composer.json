@@ -54,7 +54,7 @@
             "type": "package",
             "package": {
                 "name": "csphere/githubwrapper",
-                "version": "0.0.1",
+                "version": "1.1.1",
                 "minimum-stability": "dev",
                 "autoload": {"classmap": ["githuboauth.class.php"]},
                 "source": {
