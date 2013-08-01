@@ -39,7 +39,6 @@
             "package": {
                 "name": "wolfie/php-markdown",
                 "version": "1.2.2",
-                "version": "master",
                 "autoload": {"classmap": ["markdown.php"]},
                 "source": {
                     "url": "git://github.com/wolfie/php-markdown.git",
