@@ -26,7 +26,7 @@
 	    "mustangostang/spyc": "0.5.*@dev",
 	    "benthedesigner/dropbox": "dev-master",
 	    "michelf/php-markdown": "1.3.*@dev",
-	    "csphere/githubwrapper": "0.0.1",
+	    "csphere/githubwrapper": "0.0.*@dev",
 	    "wolfie/php-markdown": "1.2.2"
 	},
     "require-dev": {
@@ -42,6 +42,7 @@
             "package": {
                 "name": "csphere/githubwrapper",
                 "version": "0.0.1",
+                "minimum-stability": "dev",
                 "autoload": {"classmap": ["githuboauth.class.php"]},
                 "source": {
                     "url": "git://github.com/csphere/GithubApiWrapper-PHP.git",
