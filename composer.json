@@ -23,7 +23,7 @@
 	    "buggedcom/customtags": "dev-master",
 	    "mustangostang/spyc": "0.5.*@dev",
 	    "benthedesigner/dropbox": "dev-master",
-	    "michelf/php-markdown": "dev-master",
+	    "michelf/php-markdown": "dev-master@dev",
 	    "csphere/githubwrapper": "*@dev",
 	    "wolfie/php-markdown": "1.2.2@dev"
 	},
