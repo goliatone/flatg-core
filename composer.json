@@ -40,6 +40,19 @@
 	   {
             "type": "package",
             "package": {
+                "name": "wolfie/php-markdown",
+                "version": "1.2.2",
+                "autoload": {"classmap": ["markdown.php"]},
+                "source": {
+                    "url": "git://github.com/wolfie/php-markdown.git",
+                    "type": "git",
+                    "reference": "extra"
+                }
+            }
+        },
+	   {
+            "type": "package",
+            "package": {
                 "name": "csphere/githubwrapper",
                 "version": "0.0.1",
                 "minimum-stability": "dev",
@@ -50,19 +63,6 @@
                     "reference": "master"
                 }
             }
-        },
-	   	{
-            "type": "package",
-            "package": {
-                "name": "wolfie/php-markdown",
-                "version": "1.2.2",
-                "autoload": {"classmap": ["markdown.php"]},
-                "source": {
-                    "url": "git://github.com/wolfie/php-markdown.git",
-                    "type": "git",
-                    "reference": "extra"
-                }
-            }
-        }
+        }	   	
 	]
 }
