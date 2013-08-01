@@ -4,14 +4,6 @@
     "type": "library",
     "keywords": ["flatg", "flat-file", "flat", "blog"],
     "license": "MIT",
-     "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    }
-    "require": {
-        "php": ">=5.4"
-    },
     "authors": [
         {
             "name": "goliatone",
@@ -26,6 +18,7 @@
     },
     "minimum-stability": "dev",
     "require": {
+    	"php": ">=5.4",
 	    "suin/php-rss-writer": ">=1.2",
 	    "buggedcom/customtags": "dev-master",
 	    "mustangostang/spyc": "0.5.*@dev",
@@ -41,6 +34,34 @@
 	   {
 	     "type": "git",
 	     "url": "git@github.com:funkatron/FUnit.git"
-	   }	   	
+	   },
+	   {
+            "type": "package",
+            "package": {
+                "name": "wolfie/php-markdown",
+                "version": "1.2.2",
+                "version": "master",
+                "autoload": {"classmap": ["markdown.php"]},
+                "source": {
+                    "url": "git://github.com/wolfie/php-markdown.git",
+                    "type": "git",
+                    "reference": "extra"
+                }
+            }
+        },
+	   {
+            "type": "package",
+            "package": {
+                "name": "csphere/githubwrapper",
+                "version": "master",
+                "minimum-stability": "dev",
+                "autoload": {"classmap": ["githuboauth.class.php"]},
+                "source": {
+                    "url": "git://github.com/csphere/GithubApiWrapper-PHP.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }	   	
 	]
 }
