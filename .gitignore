@@ -1,0 +1,10 @@
+.travis.yml
+.htaccess
+.project
+articles/*
+composer.lock
+favicon.ico
+index.php
+assets/*
+themes/*
+vendor/*
