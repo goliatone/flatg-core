@@ -40,7 +40,6 @@
             "type": "package",
             "package": {
                 "name": "csphere/githubwrapper",
-                "version": "0.0.1",
                 "autoload": {"classmap": ["githuboauth.class.php"]},
                 "source": {
                     "url": "git://github.com/csphere/GithubApiWrapper-PHP.git",
