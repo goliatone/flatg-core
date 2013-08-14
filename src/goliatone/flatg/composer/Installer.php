@@ -7,7 +7,7 @@ class Installer
 {
     public static function build(Event $event)
     {
-        echo "Installing flatG";
+        print "Installing flatG";
         exec("touch IMHERE.md");
         
     }
