@@ -22,5 +22,5 @@ echo "Downloading flatg theme..."
 popd ./themes
 curl -L -O $THEME
 # github will redirect this link, you end up having name missmatch
-THEME_DIR=$(tar -ztf "${FLATG_RELEASE}.tar.gz" | head -n 1)
-tar -zxvf "${FLATG_RELEASE}.tar.gz"
+THEME_DIR=$(tar -ztf "${THEME_RELEASE}.tar.gz" | head -n 1)
+tar -zxvf "${THEME_RELEASE}.tar.gz"
