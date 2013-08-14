@@ -19,8 +19,11 @@ THEME_RELEASE=master
 THEME="https://github.com/goliatone/flatg-core/archive/${THEME_RELEASE}.tar.gz" 
 
 echo "Downloading flatg theme..."
-popd ./themes
+pushd ./themes
 curl -L -O $THEME
 # github will redirect this link, you end up having name missmatch
 THEME_DIR=$(tar -ztf "${THEME_RELEASE}.tar.gz" | head -n 1)
 tar -zxvf "${THEME_RELEASE}.tar.gz"
+
+echo "Cleanup binarioes..."
+rm "${THEME_RELEASE}.tar.gz"
