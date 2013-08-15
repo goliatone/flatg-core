@@ -273,7 +273,7 @@ class Router {
             $url = strstr($url, ':', TRUE);
         
         //If we want to go to root, allow.
-        if($requestUrl !== '/')
+        if($url !== '/')
             GHelper::removeTrailingSlash($url);
         
         return $url; 

@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################
-# bash <(curl -s https://raw.github.com/goliatone/flatg-core/master/installer/install.sh)
+# bash <(curl -s https://raw.github.com/goliatone/flatg-core/master/installer/installer.sh)
 ###############################
 FLATG_RELEASE=v0.0.0
 ROOT='./'
@@ -25,5 +25,5 @@ curl -L -O $THEME
 THEME_DIR=$(tar -ztf "${THEME_RELEASE}.tar.gz" | head -n 1)
 tar -zxvf "${THEME_RELEASE}.tar.gz"
 
-echo "Cleanup binarioes..."
+echo "Cleanup binaries..."
 rm "${THEME_RELEASE}.tar.gz"
