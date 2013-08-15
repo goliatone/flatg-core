@@ -149,7 +149,8 @@ class Router {
     */
     public function matchCurrentRequest() {
         $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
-        $requestUrl    = $_SERVER['REQUEST_URI'];
+        // $requestUrl    = $_SERVER['REQUEST_URI'];
+        $requestUrl    = $_SERVER['PATH_INFO'];
         
         // strip GET variables from URL
         if(($pos = strpos($requestUrl, '?')) !== FALSE) 
