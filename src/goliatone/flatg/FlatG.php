@@ -145,7 +145,7 @@ class FlatG {
                 //TODO: Send params as well!!!
                 $route = self::$router->getRoute('404');
                 $callback = $route->getTarget();
-                if(is_callable($callback)) call_user_func($callback);
+                if($callback && is_callable($callback)) call_user_func($callback);
                 else echo 404;
             }
             //else, we assume our theme has a 404 view, and try that.
