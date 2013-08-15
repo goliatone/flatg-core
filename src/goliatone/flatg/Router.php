@@ -8,6 +8,13 @@ use goliatone\flatg\Route;
  * and map them to a controller action.
  * 
  * TODO: Standardize trailing slashes!!! Clean user routes to coform to it.
+ * 
+ * @copyright Copyright (c) 2013, goliatone
+ * @author Goliatone <hello@goliatone.com>
+ *
+ * @license Please reference the MIT.md file at the root of this distribution
+ *
+ * @package flatg
  */
 class Router {
 

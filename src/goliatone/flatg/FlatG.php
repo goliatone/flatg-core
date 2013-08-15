@@ -28,19 +28,69 @@ class_alias('goliatone\flatg\GHelper', 'GHelper');
 class_alias('goliatone\flatg\ArticleModel', 'ArticleModel');
 /////////////////////////////////////////////////////////
         
-//TODO: Figure out what mysql wrapper to use.
-//TODO: Implemente defaults for config. Have a configure method
-//      and instead of doing self::$config['prop']
+/**
+ * Main interface. WIP.
+ * 
+ *
+ * TODO: Figure out what mysql wrapper to use.
+ * TODO: Implemente defaults for config. Have a configure method
+ *       and instead of doing self::$config['prop']
+ * 
+ * @copyright Copyright (c) 2013, goliatone
+ * @author Goliatone <hello@goliatone.com>
+ *
+ * @license Please reference the MIT.md file at the root of this distribution
+ *
+ * @package flatg
+ */
 class FlatG {
     
+    /**
+     * Static config holder
+     *
+     * @access static
+     * @var array
+     */
     static public $config = array();
+    
+    /**
+     * Static container holder
+     *
+     * @access static
+     * @var array
+     */
     static public $_container = array();
     
+    /**
+     * Router facade.
+     *
+     * @access static
+     * @var array
+     */
     static public $router;
+    
+    /**
+     * Articles facade.
+     *
+     * @access static
+     * @var array
+     */
     static public $articles;
+    
+    /**
+     * Markdown instance
+     *
+     * @access static
+     * @var array
+     */
     static public $markdown;
     
-    
+    /**
+     * Creates a new FlatG instance
+     *
+     * @access public
+     * @return void
+     */
     public function __constructor()
     {
         echo "<h2>Hello world!</h2>";
@@ -90,9 +140,10 @@ class FlatG {
     /**
      * Map url resource to handler implementation.
      * 
-     * @param string    $routeUrl
-     * @param mixed     $target
-     * @param array     $args
+     * @param string $routeUrl Resource string that represents the URL to be mapped.
+     * @param mixed $target Handler for the provided route.
+     * @param array $args Options.
+     * @return goliatone\flatg\Router Router instance, chainable method.
      */
     static public function map($routeUrl, $target = '', array $args = array())
     {
@@ -318,8 +369,9 @@ class GHtml
      * Compiles an array of HTML attributes into an attribute string and
      * HTML escape it to prevent malformed (but not malicious) data.
      *
-     * @param array $a the tag's attribute list
-     * @return string
+     * @access static public
+     * @param array $attrs the tag's attribute list
+     * @return string The formatted html string.
      */
     static public function attr($attrs = array())
     {
@@ -337,9 +389,9 @@ class GHtml
      *
      *     Html::div('This is div content.', array('id' => 'myDiv'));
      *
-     * @param string $tag The method name being called
-     * @param array $args Parameters passed to the called method
-     * @return string
+     * @param string $tag The method name being called.
+     * @param array $args Parameters passed to the called method.
+     * @return string Formatted tag.
      */
     static public function __callStatic($tag, $args)
     {

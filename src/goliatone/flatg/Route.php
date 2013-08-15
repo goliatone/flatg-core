@@ -2,8 +2,18 @@
 namespace goliatone\flatg;
 
 /**
+ * Route class.
+ * 
+ *
  * TODO: Add default params.
  * TODO: Review syntax and method naming. set/get?
+ * 
+ * @copyright Copyright (c) 2013, goliatone
+ * @author Goliatone <hello@goliatone.com>
+ *
+ * @license Please reference the MIT.md file at the root of this distribution
+ *
+ * @package flatg
  */
 class Route {
     

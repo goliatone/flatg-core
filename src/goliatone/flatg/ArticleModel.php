@@ -4,9 +4,15 @@ namespace goliatone\flatg;
 use DateTime;
 use DirectoryIterator;
 
-
 /**
+ * Article model class.
  * 
+ * @copyright Copyright (c) 2013, goliatone
+ * @author Goliatone <hello@goliatone.com>
+ *
+ * @license Please reference the MIT.md file at the root of this distribution
+ *
+ * @package flatg
  */
 class ArticleModel
 {
