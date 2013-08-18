@@ -28,7 +28,7 @@ class Installer
         
         copy($templates.'index.php', $installer->appendBasePath('index.php'));
         copy($templates.'htaccess', $installer->appendBasePath('.htaccess'));
-        copy($templates.'articles/welcom.yaml', $installer->appendBasePath('articles/welcom.yaml'));
+        copy($templates.'articles/welcome.yaml', $installer->appendBasePath('articles/welcome.yaml'));
         copy($templates.'config/main.php', $installer->appendBasePath('config/main.php'));
         copy($templates.'config/passwords', $installer->appendBasePath('config/.passwords'));
     }
