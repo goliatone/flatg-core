@@ -47,16 +47,16 @@ FLATG_RELEASE=v0.0.0
 ROOT='./'
 THEME_URL=
 
+echo "Creating flatg dir structure at $ROOT..."
+mkdir -p ${ROOT}/{assets,articles,themes,config}
+#TODO: we should ensure that this dirs have the right perms.
+
 echo "Downloading composer.json file..."
 COMPOSER_URL="https://raw.github.com/goliatone/flatg-core/master/installer/composer.json" 
 curl -L -O $COMPOSER_URL
 
 echo "Execute composer"
 composer install
-
-echo "Creating flatg dir structure at $ROOT..."
-mkdir -p ${ROOT}/{assets,articles,themes,config}
-#TODO: we should ensure that this dirs have the right perms.
 
 THEME_RELEASE=master
 THEME="https://github.com/goliatone/flatg-core/archive/${THEME_RELEASE}.tar.gz" 
