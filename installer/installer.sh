@@ -18,14 +18,14 @@ check_system_requirements(){
 	}
 
 	#we need npm
-	hash npm -v 2>/dev/null || { 
-		read -p "I require node's npm but it's not installed. Do you want to install npm? (Y/n)."; run; 
-		if [ "$run" == n ]; then
-		    exit 1;
-		fi
-		echo "Downloading npm..."
-		curl http://npmjs.org/install.sh | sudo sh
-	}
+	# hash npm 2>/dev/null || { 
+	# 	read -p "I require node's npm but it's not installed. Do you want to install npm? (Y/n)."; run; 
+	# 	if [ "$run" == n ]; then
+	# 	    exit 1;
+	# 	fi
+	# 	echo "Downloading npm..."
+	# 	curl http://npmjs.org/install.sh | sudo sh
+	# }
 	#we need bower
 	hash bower -v 2>/dev/null || { 
 		read -p "I require bower but it's not installed. Do you want to install bower? (Y/n)."; run; 
