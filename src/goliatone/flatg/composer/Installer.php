@@ -26,7 +26,7 @@ class Installer
         echo "Copy index to: ".$pwd.'index.php'."\n";
         echo "----------------\n";
         
-        copy($templates.'index.php', $pwd.'index.php');
+        copy($templates.'index.php', $installer->appendBasePath('index.php'));
     }
     
     
@@ -49,5 +49,10 @@ class Installer
     {
         return $this->basePath.'goliatone/flatg/installer'.DIRECTORY_SEPARATOR;
         // return implode(DIRECTORY_SEPARATOR, array($this->basePath,'goliatone', 'flatg','installer'));
+    }
+
+    public function appendBasePath($file)
+    {
+        return $this->basePath.$file;
     }
 }
