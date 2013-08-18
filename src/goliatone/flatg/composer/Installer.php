@@ -22,6 +22,8 @@ class Installer
         echo "WORKING DIR home is: ".getcwd()."\n";
         echo "Templates DIR home is: ".$templates."\n";
         echo "Templates DIR home is: ".realpath($templates)."\n";
+        echo "Get index at: ".$templates.'index.php'."\n";
+        echo "Copy index to: ".$pwd.'index.php'."\n";
         echo "----------------\n";
         
         copy($templates.'index.php', $pwd.'index.php');
