@@ -14,7 +14,7 @@ class Installer
         $templates = $installer->getTemplatesPath();
         $composer = $event->getComposer();
         $config = $composer->getConfig();
-        $this->vendorDir = rtrim($config()->get('vendor-dir'), '/');
+        $vendorDir = rtrim($config->get('vendor-dir'), '/');
         echo $config->get('home');
     }
     
