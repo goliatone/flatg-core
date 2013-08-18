@@ -14,6 +14,7 @@ composer install
 
 echo "Creating flatg dir structure at $ROOT..."
 mkdir -p ${ROOT}/{assets,articles,themes}
+#TODO: we should ensure that this dirs have the right perms.
 
 THEME_RELEASE=master
 THEME="https://github.com/goliatone/flatg-core/archive/${THEME_RELEASE}.tar.gz" 
@@ -23,7 +24,7 @@ pushd ./themes
 curl -L -O $THEME
 # github will redirect this link, you end up having name missmatch
 THEME_DIR=$(tar -ztf "${THEME_RELEASE}.tar.gz" | head -n 1)
-tar -zxvf "${THEME_RELEASE}.tar.gz"
+tar -zxvf "${THEME_RELEASE}.tar.gz" # -C untar_here_dir_name
 
 echo "Cleanup binaries..."
 rm "${THEME_RELEASE}.tar.gz"
