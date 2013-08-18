@@ -20,9 +20,11 @@ class Installer
         $vendorDir = rtrim($config->get('vendor-dir'), '/');
         echo "----------------\n";
         echo "WORKING DIR home is: ".getcwd()."\n";
-        echo "Templates DIR home is: ".$pwd.DIRECTORY_SEPARATOR.$vendorDir.DIRECTORY_SEPARATOR.$templates."\n";
-        echo "Templates DIR home is: ".realpath($pwd.DIRECTORY_SEPARATOR.$vendorDir.DIRECTORY_SEPARATOR.$templates)."\n";
+        echo "Templates DIR home is: ".$templates."\n";
+        echo "Templates DIR home is: ".realpath($templates)."\n";
         echo "----------------\n";
+        
+        copy($templates.'index.php', $pwd.'index.php');
     }
     
     
@@ -30,15 +32,19 @@ class Installer
     {
         $this->pwd = $workingDir;
         $this->composer = $composer;
+        $config = $composer->getConfig();
+        $this->vendor = rtrim($config->get('vendor-dir'), DIRECTORY_SEPARATOR);
+        $this->basePath = $this->pwd.DIRECTORY_SEPARATOR.$this->vendor.DIRECTORY_SEPARATOR;
     }
     
     public function getTemplatesPath()
     {
-        return $this->getResourcesPath().'/templates';
+        return implode(DIRECTORY_SEPARATOR, array($this->getResourcesPath(),'templates'));
+        // return $this->getResourcesPath().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR;
     }
     
     public function getResourcesPath()
     {
-        return 'goliatone/flatg/installer';
+        return implode(DIRECTORY_SEPARATOR, array($this->basePath,'goliatone', 'flatg','installer'));
     }
 }
