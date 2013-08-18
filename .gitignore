@@ -8,3 +8,5 @@ index.php
 assets/*
 themes/*
 vendor/*
+
+config/.passwords
