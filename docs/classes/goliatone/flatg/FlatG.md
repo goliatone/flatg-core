@@ -229,6 +229,62 @@ TODO: Nested render views?
 
 #### <span style="color:#3e6a6e;">assetUri()</span>
 
+Echoes the asset uri with the prepended base path.
+TODO: Make clean interface. We should be able to not
+append anything and not specify asset dir.
+
+###### Parameters
+
+<table>
+	<thead>
+		<th>Name</th>
+		<th>Type(s)</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+			
+		<tr>
+			<td>
+				$asset
+			</td>
+			<td>
+									<a href="http://www.php.net/language.types.string.php">string</a>
+				
+			</td>
+			<td>
+				Asset url.
+			</td>
+		</tr>
+					
+		<tr>
+			<td>
+				$base_url
+			</td>
+			<td>
+									<a href="http://www.php.net/language.pseudo-types.php">mixed</a>
+				
+			</td>
+			<td>
+				Base url to prepend.
+			</td>
+		</tr>
+			
+	</tbody>
+</table>
+
+###### Returns
+
+<dl>
+	
+		<dt>
+			string
+		</dt>
+		<dd>
+			absolute url to the asset.
+		</dd>
+	
+</dl>
+
 
 <hr />
 

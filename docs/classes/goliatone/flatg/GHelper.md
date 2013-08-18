@@ -83,6 +83,52 @@ TODO: Remove?
 
 <hr />
 
+#### <span style="color:#3e6a6e;">ensureTrailingSlash()</span>
+
+Array
+
+###### Parameters
+
+<table>
+	<thead>
+		<th>Name</th>
+		<th>Type(s)</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+			
+		<tr>
+			<td>
+				$path
+			</td>
+			<td>
+									<a href="http://www.php.net/language.types.string.php">string</a>
+				
+			</td>
+			<td>
+				Source path.
+			</td>
+		</tr>
+			
+	</tbody>
+</table>
+
+###### Returns
+
+<dl>
+	
+		<dt>
+			string
+		</dt>
+		<dd>
+			Source path with trailing slash.
+		</dd>
+	
+</dl>
+
+
+<hr />
+
 #### <span style="color:#3e6a6e;">removeFilesFromDir()</span>
 
 
