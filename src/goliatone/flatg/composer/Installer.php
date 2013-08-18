@@ -34,11 +34,11 @@ class Installer
     
     public function getTemplatesPath()
     {
-        return 'installer/templates';
+        return $this->getResourcesPath().'/templates';
     }
     
     public function getResourcesPath()
     {
-        return 'installer';
+        return 'goliatone/flatg/installer';
     }
 }
