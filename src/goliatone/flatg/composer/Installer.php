@@ -15,7 +15,9 @@ class Installer
         $composer = $event->getComposer();
         $config = $composer->getConfig();
         $vendorDir = rtrim($config->get('vendor-dir'), '/');
-        echo $config->get('home');
+        echo "----------------";
+        echo "Config home is: ".$config->get('home');
+        echo "----------------";
     }
     
     
