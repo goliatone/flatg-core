@@ -5,8 +5,9 @@
 # MAKE SURE WE HAVE SYSTEM REQUIREMENTS.
 #############################################################################################
 check_system_requirements(){
+	#we need composer
 	hash composer 2>/dev/null || { 
-		read -p "I require composer but it's not installed. Do you want to install id? (Y/n)."; run; 
+		read -p "I require composer but it's not installed. Do you want to install composer? (Y/n)."; run; 
 		if [ "$run" == n ]; then
 		    exit 1;
 		fi
@@ -15,6 +16,26 @@ check_system_requirements(){
 		echo "Making composer executable..."
 		mv composer.phar /usr/local/bin/composer
 	}
+
+	#we need npm
+	hash npm -v 2>/dev/null || { 
+		read -p "I require node's npm but it's not installed. Do you want to install npm? (Y/n)."; run; 
+		if [ "$run" == n ]; then
+		    exit 1;
+		fi
+		echo "Downloading npm..."
+		curl http://npmjs.org/install.sh | sudo sh
+	}
+	#we need bower
+	hash bower -v 2>/dev/null || { 
+		read -p "I require bower but it's not installed. Do you want to install bower? (Y/n)."; run; 
+		if [ "$run" == n ]; then
+		    exit 1;
+		fi
+		echo "Downloading bower..."
+		npm install -g bower
+	}
+	
 }
 
 check_system_requirements
