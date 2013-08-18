@@ -9,6 +9,26 @@ class Installer
     {
         print "Installing flatG";
         exec("touch IMHERE.md");
+        $installer = new Installer();
         
+        $templates = $installer->getTemplatesPath();
+        $composer = $event->getComposer();
+        $this->vendorDir = rtrim($composer->getConfig()->get('vendor-dir'), '/');
+    }
+    
+    
+    public function __construct()
+    {
+        
+    }
+    
+    public function getTemplatesPath()
+    {
+        return '../../../../installer/templates';
+    }
+    
+    public function getResourcesPath()
+    {
+        return '../../../../installer';
     }
 }
