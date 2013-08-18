@@ -19,7 +19,7 @@ class Installer
         $vendorDir = rtrim($config->get('vendor-dir'), '/');
         echo "----------------\n";
         echo "WORKING DIR home is: ".getcwd()."\n";
-        echo "Templates DIR home is: ".realpath($templates)."\n";
+        echo "Templates DIR home is: ".realpath($pwd.DIRECTORY_SEPARATOR.$vendorDir.DIRECTORY_SEPARATOR.$templates)."\n";
         echo "----------------\n";
     }
     
@@ -31,11 +31,11 @@ class Installer
     
     public function getTemplatesPath()
     {
-        return '../../../../installer/templates';
+        return 'installer/templates';
     }
     
     public function getResourcesPath()
     {
-        return '../../../../installer';
+        return 'installer';
     }
 }
