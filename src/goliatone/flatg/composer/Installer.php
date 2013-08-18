@@ -9,23 +9,24 @@ class Installer
     {
         print "Installing flatG";
         exec("touch IMHERE.md");
-        $installer = new Installer();
+        
+        $pwd = getcwd();
+        $installer = new Installer($pwd);
         
         $templates = $installer->getTemplatesPath();
         $composer = $event->getComposer();
         $config = $composer->getConfig();
         $vendorDir = rtrim($config->get('vendor-dir'), '/');
         echo "----------------\n";
-        echo "Config home is: ".$config->get('home')."\n";
-        echo "Vendor home is: ".$vendorDir."\n";
         echo "WORKING DIR home is: ".getcwd()."\n";
+        echo "Templates DIR home is: ".realpath($templates)."\n";
         echo "----------------\n";
     }
     
     
-    public function __construct()
+    public function __construct($workingDir)
     {
-        
+        $this->pwd = $workingDir;
     }
     
     public function getTemplatesPath()
