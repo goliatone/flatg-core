@@ -262,11 +262,19 @@ class FlatG {
     }
     
     /**
+     * Echoes the asset uri with the prepended base path.
+     * TODO: Make clean interface. We should be able to not
+     *       append anything and not specify asset dir.
      * 
+     * @param  string  $asset    Asset url.
+     * @param  mixed   $base_url Base url to prepend.
+     * @return string            absolute url to the asset.
      */
-    static public function assetUri($asset)
+    static public function assetUri($asset, $asset_dir = FALSE)
     {
-        echo self::$config['base_url'].self::$config['asset_dir'].$asset;
+        $asset_dir = $asset_dir === FALSE ? self::$config['asset_dir'] : $asset_dir;
+        $asset_dir = GHelper::ensureTrailingSlash($asset_dir);
+        echo self::$config['base_url'].$asset_dir.$asset;
     }
     
     /**
@@ -563,6 +571,16 @@ class GHelper
     static public function removeTrailingSlash($path, $slash = '/')
     {
         return rtrim($path, $slash);
+    }
+
+    /**
+     * Make sure our path has a trailing slash.
+     * @param  string $path Source path.
+     * @return string       Source path with trailing slash.
+     */
+    static public function ensureTrailingSlash($path)
+    {
+        return GHelper::removeTrailingSlash($asset_dir).'/';
     }
 
     /**
