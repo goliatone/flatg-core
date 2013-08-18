@@ -18,7 +18,6 @@
     },
     "minimum-stability": "dev",
     "require": {
-    	"php": ">=5.4",
 	    "suin/php-rss-writer": ">=1.2",
 	    "buggedcom/customtags": "dev-master",
 	    "mustangostang/spyc": "0.5.*@dev",
