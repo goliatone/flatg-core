@@ -39,12 +39,13 @@ class Installer
     
     public function getTemplatesPath()
     {
-        return implode(DIRECTORY_SEPARATOR, array($this->getResourcesPath(),'templates'));
-        // return $this->getResourcesPath().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR;
+        // return implode(DIRECTORY_SEPARATOR, array($this->getResourcesPath(),'templates'));
+        return $this->getResourcesPath().DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR;
     }
     
     public function getResourcesPath()
     {
-        return implode(DIRECTORY_SEPARATOR, array($this->basePath,'goliatone', 'flatg','installer'));
+        return $this->basePath.DIRECTORY_SEPARATOR.'goliatone/flatg/installer'.DIRECTORY_SEPARATOR;
+        // return implode(DIRECTORY_SEPARATOR, array($this->basePath,'goliatone', 'flatg','installer'));
     }
 }
