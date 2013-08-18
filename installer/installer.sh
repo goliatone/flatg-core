@@ -1,10 +1,31 @@
 #!/bin/bash
-###############################
+#############################################################################################
 # bash <(curl -s https://raw.github.com/goliatone/flatg-core/master/installer/installer.sh)
-###############################
+#############################################################################################
+# MAKE SURE WE HAVE SYSTEM REQUIREMENTS.
+#############################################################################################
+check_system_requirements(){
+	hash composer 2>/dev/null || { 
+		read -p "I require composer but it's not installed. Do you want to install id? (Y/n)."; run; 
+		if [ "$run" == n ]; then
+		    exit 1;
+		fi
+		echo "Downloading composer..."
+		curl -sS https://getcomposer.org/installer | php
+		echo "Making composer executable..."
+		mv composer.phar /usr/local/bin/composer
+	}
+}
+
+check_system_requirements
+
+#############################################################################################
+# START INSTALLATION PROCESS
+#############################################################################################
 FLATG_RELEASE=v0.0.0
 ROOT='./'
 THEME_URL=
+
 echo "Downloading composer.json file..."
 COMPOSER_URL="https://raw.github.com/goliatone/flatg-core/master/installer/composer.json" 
 curl -L -O $COMPOSER_URL
