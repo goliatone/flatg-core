@@ -55,7 +55,7 @@ echo "Execute composer"
 composer install
 
 echo "Creating flatg dir structure at $ROOT..."
-mkdir -p ${ROOT}/{assets,articles,themes}
+mkdir -p ${ROOT}/{assets,articles,themes, config}
 #TODO: we should ensure that this dirs have the right perms.
 
 THEME_RELEASE=master

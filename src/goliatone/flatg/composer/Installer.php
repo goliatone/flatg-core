@@ -27,6 +27,8 @@ class Installer
         echo "----------------\n";
         
         copy($templates.'index.php', $installer->appendBasePath('index.php'));
+        copy($templates.'htaccess', $installer->appendBasePath('.htaccess'));
+        copy($templates.'articles/welcom.yaml', $installer->appendBasePath('articles/welcom.yaml'));
     }
     
     
