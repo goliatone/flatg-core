@@ -11,22 +11,25 @@ class Installer
         exec("touch IMHERE.md");
         
         $pwd = getcwd();
-        $installer = new Installer($pwd);
+        $composer = $event->getComposer();
+        $installer = new Installer($pwd, $composer);
         
         $templates = $installer->getTemplatesPath();
-        $composer = $event->getComposer();
+        
         $config = $composer->getConfig();
         $vendorDir = rtrim($config->get('vendor-dir'), '/');
         echo "----------------\n";
         echo "WORKING DIR home is: ".getcwd()."\n";
+        echo "Templates DIR home is: ".$pwd.DIRECTORY_SEPARATOR.$vendorDir.DIRECTORY_SEPARATOR.$templates."\n";
         echo "Templates DIR home is: ".realpath($pwd.DIRECTORY_SEPARATOR.$vendorDir.DIRECTORY_SEPARATOR.$templates)."\n";
         echo "----------------\n";
     }
     
     
-    public function __construct($workingDir)
+    public function __construct($workingDir, $composer)
     {
         $this->pwd = $workingDir;
+        $this->composer = $composer;
     }
     
     public function getTemplatesPath()
