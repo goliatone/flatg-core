@@ -27,7 +27,7 @@ check_system_requirements(){
 	# 	curl http://npmjs.org/install.sh | sudo sh
 	# }
 	#we need bower
-	hash bower -v 2>/dev/null || { 
+	hash bower 2>/dev/null || { 
 		read -p "I require bower but it's not installed. Do you want to install bower? (Y/n)."; run; 
 		if [ "$run" == n ]; then
 		    exit 1;
