@@ -10,7 +10,6 @@
         }
     ],
     "require": {
-     	"php": ">=5.4",
 	    "goliatone/flatg": "1.0.x-dev"
 	},
 	"minimum-stability": "dev",

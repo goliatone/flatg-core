@@ -26,6 +26,8 @@ class Installer
         echo "Copy index to: ".$installer->appendBasePath('index.php')."\n";
         echo "----------------\n";
         
+        //We should make sure that we have all the directory structure in place.
+        //create {config,assets,articles,themes}
         copy($templates.'index.php', $installer->appendBasePath('index.php'));
         copy($templates.'htaccess', $installer->appendBasePath('.htaccess'));
         copy($templates.'articles/welcome.yaml', $installer->appendBasePath('articles/welcome.yaml'));

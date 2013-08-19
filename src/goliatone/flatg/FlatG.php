@@ -580,7 +580,7 @@ class GHelper
      */
     static public function ensureTrailingSlash($path)
     {
-        return GHelper::removeTrailingSlash($asset_dir).'/';
+        return GHelper::removeTrailingSlash($path).'/';
     }
 
     /**
