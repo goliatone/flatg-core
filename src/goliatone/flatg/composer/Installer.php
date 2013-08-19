@@ -26,7 +26,9 @@ class Installer
         echo "Copy index to: ".$installer->appendBasePath('index.php')."\n";
         echo "----------------\n";
         
-        //We should make sure that we have all the directory structure in place.
+        //TODO: Decouple from composer, so we can run this standalone?
+        
+        //TODO: We should make sure that we have all the directory structure in place.
         //create {config,assets,articles,themes}
         copy($templates.'index.php', $installer->appendBasePath('index.php'));
         copy($templates.'htaccess', $installer->appendBasePath('.htaccess'));
