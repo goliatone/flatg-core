@@ -1,6 +1,7 @@
 <?php
 namespace goliatone\flatg;
 
+use Exception;
 use goliatone\flatg\Route;
 
 /**
@@ -252,7 +253,7 @@ class Router {
     public function generate($routeName, array $params = array()) {
         // Check if route exists
         if(!$this->hasRoute($routeName))            
-            throw new Exception("No route with the name $routeName has been found.");
+            throw new Exception("No route with the name '$routeName' has been found.");
         
         $route = $this->namedRoutes[$routeName];
         $url = $route->getUrl();
