@@ -23,7 +23,8 @@
 	    "mustangostang/spyc": "0.5.*@dev",
 	    "benthedesigner/dropbox": "dev-master",
 	    "csphere/githubwrapper": "*@dev",
-	    "wolfie/php-markdown": "1.2.2@dev"
+	    "wolfie/php-markdown": "1.2.2@dev",
+	    "maximebf/debugbar": "1.*"
 	},
     "require-dev": {
         "funkatron/funit": ">=0.3",

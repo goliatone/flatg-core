@@ -16,3 +16,7 @@ Apps > flatg > flatg.com > articles
 
 ### Documentation
 To generate docs, run `php sage.php ./src ./docs`
+
+
+
+Use [flatten](https://github.com/Anahkiasen/flatten) cache.
