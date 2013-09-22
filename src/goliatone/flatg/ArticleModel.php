@@ -82,6 +82,14 @@ class ArticleModel
     /**
      * 
      */
+    public function formatDate($format="F jS, Y")
+    {
+        return date($format, strtotime($this->date));
+    }
+    
+    /**
+     * 
+     */
     public function getExcerpt($max=300, $truncate = TRUE)
     {
         //If post has excerpt, we compile markdown and spit that out.
@@ -150,7 +158,7 @@ class ArticleModel
     /**
      * 
      */
-    static public function findBy($attribute,$value, $index = FALSE)
+    static public function findBy($attribute, $value, $index = FALSE)
     {
         $i = 0;
         $indexed = NULL;
