@@ -233,7 +233,7 @@ class Router {
             {
                 //if(!isset($matches[$key + 1])) continue;
                 if(isset($matches[$key + 1]))
-                    $params[$name] = $matches[$key + 1];
+                    $params[$name] = rtrim($matches[$key + 1], "/");
             }
 
         }
