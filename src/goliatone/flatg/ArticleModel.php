@@ -110,6 +110,13 @@ class ArticleModel
      */
     public function getFilename(){ return $this->_file_name; }
     
+    /**
+     * 
+     */
+    public function __toString()
+    {
+        return $this->title; 
+    }
     
 /////////////////////////////////////////////////////////////////////////////////
 // STATIC METHODS.
