@@ -2,7 +2,7 @@
 // include('./');
 //TODO:Also, make a FlatG::import('path') so we can cache and 
 //encapsulate logic...
-$passwords = include_once('./.passwords');
+$passwords = include_once('.passwords');
 
 //TODO: Normalize basePath & base_url. Make robust.
 
