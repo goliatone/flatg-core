@@ -1,5 +1,6 @@
 ## TODO
 
+* Implement event driven flow.
 * Formalize theme structure.
 * Handle multiple blogs per dropbox backend [*]
 * Integrate themes with bower.
