@@ -252,6 +252,7 @@ class Router {
      */
     public function generate($routeName, array $params = array()) {
         // Check if route exists
+        //TODO: Do we really want to kill the app here?!
         if(!$this->hasRoute($routeName))            
             throw new Exception("No route with the name '$routeName' has been found.");
         
