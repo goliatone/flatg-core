@@ -10,6 +10,7 @@ use goliatone\flatg\View;
 use goliatone\flatg\backend\Storage;
 use goliatone\flatg\controllers\DefaultController;
 
+use goliatone\events\Event;
 /////////////////////////////////////////////////////////
 //BOOTSTRAP
 //TODO: Move to boostrap file.
@@ -168,13 +169,14 @@ class FlatG {
      */
     static public function run()
     {
-        
-                
-        
         $route = self::$router->matchCurrentRequest();
         
         if($route)
         {
+            ////// TODO: Implement real event flow
+            $e = new Event('route');
+            $e->dispatch();
+            //////////////////////////////////////
             
             $callback = $route->getTarget();
             
