@@ -3,7 +3,7 @@
 require './vendor/autoload.php';
 require './vendor/funkatron/funit/FUnit.php';
 
-$config = include_once('./tests/config.php');
+$config = include_once('./tests/fixtures/config.php');
 
 use \FUnit\fu;
 use goliatone\flatg\FlatG;
