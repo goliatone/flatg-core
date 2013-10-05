@@ -181,7 +181,8 @@ class FlatG {
         if($route)
         {
             ////// TODO: Implement real event flow
-            $e = new Event('route');
+            $event_name = $route->getName();
+            $e = new Event($event_name);
             $e->dispatch();
             //////////////////////////////////////
             
