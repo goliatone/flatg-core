@@ -47,14 +47,16 @@ class Router {
     
     public $requestUrl;
     
-    public function __construct(){
+    public function __construct()
+    {
         $this->reset();    
     }
     
     /**
      * 
      */
-    public function reset(){
+    public function reset()
+    {
         $this->_routes = array();
         $this->namedRoutes = array();
         
@@ -66,7 +68,8 @@ class Router {
      * TODO:RENAME TO setBaseUrl
      * @param string $base_url 
      */
-    public function setBasePath($basePath) {
+    public function setBasePath($basePath) 
+    {
         $basePath = rtrim($basePath, "/");
         $this->basePath = (string) $basePath;
     }
@@ -81,7 +84,8 @@ class Router {
     *                       this into a filename, controller / action pair, etc..
     * @param array $args Array of optional arguments.
     */
-    public function map($routeUrl, $target = '', array $args = array()) {
+    public function map($routeUrl, $target = '', array $args = array())
+    {
         
         if(is_array($routeUrl))
         {
