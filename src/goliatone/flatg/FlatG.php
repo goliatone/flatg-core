@@ -121,6 +121,16 @@ class FlatG {
     }
     
     /**
+     * TODO: Make it for real!
+     */
+    static private $_messages = array();
+    static public $logger;
+    static public function logger($id='default')
+    {
+        return self::$logger;
+    }
+    
+    /**
      * Simple registry. 
      */
     static public function container($id, $containee = ':::GETTER:::')
@@ -151,7 +161,7 @@ class FlatG {
      */
     static public function map($routeUrl, $target = '', array $args = array())
     {
-        self::$router->map($routeUrl, $target, $args);
+        self::$router->map($routeUrl, $target, $args);        
         return self::$router;
     }
     
@@ -182,7 +192,8 @@ class FlatG {
         {
             ////// TODO: Implement real event flow
             $event_name = $route->getName();
-            $e = new Event($event_name);
+            $event_args = $route->getAugmentedParams();
+            $e = new Event($event_name, $event_args);
             $e->dispatch();
             //////////////////////////////////////
             
@@ -616,3 +627,61 @@ class GHelper
     
     
 }
+
+class GLogger
+{
+    const EMERGENCY = 1;
+    const ALERT     = 2;
+    const CRITICAL  = 3;
+    const ERROR     = 4;
+    const WARN      = 5;
+    const WARNING   = 5;
+    const NOTICE    = 6;
+    const INFO      = 7;
+    const DEBUG     = 8;
+
+    /**
+     * @var array
+     */
+    protected static $levels = array(
+        self::EMERGENCY => 'EMERGENCY',
+        self::ALERT     => 'ALERT',
+        self::CRITICAL  => 'CRITICAL',
+        self::ERROR     => 'ERROR',
+        self::WARNING   => 'WARNING',
+        self::NOTICE    => 'NOTICE',
+        self::INFO      => 'INFO',
+        self::DEBUG     => 'DEBUG'
+    );
+    
+    static public $messages = array();
+    
+    /**
+     * Constructor
+     * @param  mixed $writer
+     */
+    public function __construct($writer = NULL)
+    {
+    }
+   
+    public function __call($method, $args)
+    {
+        
+        if(in_array(strtoupper($method), self::$levels))
+        {
+            array_unshift($args, $method);
+            call_user_func_array(array($this, 'log'), $args);
+        }
+    }
+    
+    public function log($level, $object, $context = array())
+    {
+        array_push(self::$messages, array('l'=>$level, 'o'=>$object, 'c'=>$context));
+    }
+    
+    public function __toString()
+    {
+        return "[object Glogger]";
+    }
+}
+FlatG::$logger = new GLogger;
