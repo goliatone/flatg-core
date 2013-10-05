@@ -102,7 +102,7 @@ class FlatG {
         self::$config = $config;
         
         
-        
+        //TODO: Decouple, handle with plugin/events
         //TODO: Do we want to use simpleIOC?   
         ArticleModel::$parser = new \Spyc();
         ArticleModel::$path = $config['articles_path'];
@@ -120,6 +120,9 @@ class FlatG {
         return self::$markdown->transform("[FlatG](http://flatg.com/)");
     }
     
+    /**
+     * Simple registry. 
+     */
     static public function container($id, $containee = ':::GETTER:::')
     {
         if($containee === ':::GETTER:::')
@@ -169,6 +172,10 @@ class FlatG {
      */
     static public function run()
     {
+        //Have we been initialized?
+        if(empty(self::$config))
+            throw new ErrorException("FlatG needs to be initialized");
+        
         $route = self::$router->matchCurrentRequest();
         
         if($route)
@@ -202,7 +209,10 @@ class FlatG {
                 else echo 404;
             }
             //else, we assume our theme has a 404 view, and try that.
-            else self::render('404', array());
+            else 
+            {
+                // self::render('404', array());
+            }
             
             //else, we just show an error message.
         }
@@ -226,7 +236,8 @@ class FlatG {
     }
     
     /**
-     * 
+     * TODO: Normalize signature, use same for all
+     *       renderX methods.
      */
     static public function renderJSON($data)
     {
@@ -243,6 +254,10 @@ class FlatG {
         } 
     }
     
+    /**
+     * TODO: Normalize signature, use same for all
+     *       renderX methods.
+     */
     static public function renderXML($data)
     {
         // header('Content-Type: application/atom+xml');
