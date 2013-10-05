@@ -85,7 +85,7 @@ class Router {
         
         if(is_array($routeUrl))
         {
-            foreach($routeUrl as $index=>$route)
+            foreach($routeUrl as $index => $route)
             {
                 $this->map($route, $target, $args);
             }
@@ -121,8 +121,13 @@ class Router {
             else
             {
                 //we already have a route with this name.
-                //WHAT TO DO?!           
+                //WHAT TO DO?!      
             } 
+        } 
+        else 
+        {
+            //we have a route without a name.
+            //WHAT TO DO?!
         }
         
         $this->_routes[] = $route;
@@ -159,7 +164,11 @@ class Router {
     * Matches the current request against mapped routes
     */
     public function matchCurrentRequest() {
-        $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
+        //Dirty hack to support PUT/DELETE
+        $requestMethod = (isset($_POST['_method']) &&
+                         ($_method = strtoupper($_POST['_method'])) &&
+                         in_array($_method, array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
+        
         // $requestUrl    = $_SERVER['REQUEST_URI']; $_SERVER['PATH_INFO'];
         $requestUrl    = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/';
         
@@ -251,10 +260,11 @@ class Router {
      * @return string The url to the route
      */
     public function generate($routeName, array $params = array()) {
+        
         // Check if route exists
         //TODO: Do we really want to kill the app here?!
-        if(!$this->hasRoute($routeName))            
-            throw new Exception("No route with the name '$routeName' has been found.");
+        if(!$this->hasRoute($routeName))
+            throw new Exception("No route '{$routeName}' has been found.");
         
         $route = $this->namedRoutes[$routeName];
         $url = $route->getUrl();
@@ -293,7 +303,7 @@ class Router {
     }
     
     /**
-     * 
+     * Check if router has route by name.
      */
     public function hasRoute($routeName)
     {
