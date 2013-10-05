@@ -32,9 +32,9 @@ return array(
         'basePath' => ''
      ),
      //TODO: We should we able to get this by default.
-    'base_url' => 'http://localhost:8000/',
+    'base_url' => 'http://goliatone.com/',
     
-    'analytics_code'=>'UA-41380790-1',
+    'analytics_code'=>'UA-XXXXXXX-1',
     
     'backend_storage' =>array(
         'default'=>'dropbox',
