@@ -18,6 +18,7 @@
     },
     "minimum-stability": "dev",
     "require": {
+	    "goliatone/gdispatcher": "1.0.x-dev",
 	    "suin/php-rss-writer": ">=1.2",
 	    "buggedcom/customtags": "dev-master",
 	    "mustangostang/spyc": "0.5.*@dev",
