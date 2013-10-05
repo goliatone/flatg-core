@@ -15,3 +15,7 @@ Maybe just one drafts folder, and between date and type meta then on publish we 
 
 
 ### Pages: Build menu from dir structure. 
+
+
+### Error Handling. 
+Define how we handle errors and which ones should be server errors (ie 500) and which ones should be app errors (ie no config).

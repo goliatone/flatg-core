@@ -8,6 +8,7 @@ $config = include_once('./tests/config.php');
 use \FUnit\fu;
 use goliatone\flatg\FlatG;
 use goliatone\flatg\Route;
+use goliatone\events\Event;
 
 fu::setup(function() use($config) {
     // set a fixture to use in tests
