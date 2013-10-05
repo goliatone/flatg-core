@@ -18,6 +18,7 @@ fu::setup(function() use($config) {
 
 fu::teardown(function() {
     // this resets the fu::$fixtures array. May not provide clean shutdown
+    FlatG::$router->reset();
     fu::reset_fixtures();
 });
 
@@ -132,6 +133,46 @@ fu::test("Route::arrayToObject",function(){
     $result = $route->getTarget();
     fu::equal($result, $target, "Returns a valid regexp string");
 });
+
+/////////////////////////////////////////////
+// ROUTER
+/////////////////////////////////////////////
+fu::test("Router: we can add routes", function(){
+   FlatG::map('/404', function(){}, array('name'=>'404'));
+   $result = FlatG::$router->hasRoute('404');
+   fu::ok($result, 'We have a 404 route'); 
+});
+/////////////////////////////////////////////
+// App
+/////////////////////////////////////////////
+fu::test("FlatG::map",function(){
+    
+    $_SERVER['REQUEST_URI'] = '/notes';
+    $_SERVER['REDIRECT_URL'] = '/notes';
+    $_SERVER['REQUEST_METHOD'] ='GET';
+    $_SERVER['QUERY_STRING'] = '';
+    $_SERVER['SCRIPT_NAME'] = '/index.php';
+    $_SERVER['PATH_INFO'] = '/notes';
+    $_SERVER['PATH_TRANSLATED'] = 'redirect:/index.php/notes';
+    $_SERVER['PHP_SELF'] = '/index.php/notes';
+    
+    $result = "empty";
+    $expected = "__handled__";
+    $handler = function() use (&$result){
+        $result = "__handled__";
+    };
+    FlatG::map('/404', function(){}, array('name'=>'404'));
+    FlatG::map('/notes', 
+               $handler,
+               array('methods' => 'GET', 'name'=>'notes')
+               );
+    $config = fu::fixture('config');
+    FlatG::initialize($config);
+    FlatG::run();
+    
+    fu::equal($result, $expected);
+});
+
 
 $exit = fu::run();
 exit($exit);
