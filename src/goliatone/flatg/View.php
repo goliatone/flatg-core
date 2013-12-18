@@ -8,7 +8,8 @@ use Exception;
  * @copyright Copyright (c) 2013, goliatone
  * @author Goliatone <hello@goliatone.com>
  *
- * @license Please reference the MIT.md file at the root of this distribution
+ * @license Please reference the MIT.md 
+ *          file at the root of this distribution
  *
  * @package flatg
  */
@@ -118,8 +119,8 @@ class View
     public function setViewDirectory($dir)
     {
         if(!is_dir($dir)) throw new Exception("Invalid view directory: {$dir}");
-        //im assuming that we are on nix :)
-        $this->_viewDirectory = rtrim($dir, '/');
+        
+        $this->_viewDirectory = rtrim($dir, DIRECTORY_SEPARATOR);
         
         return $this;
     }

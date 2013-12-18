@@ -11,7 +11,8 @@ namespace goliatone\flatg;
  * @copyright Copyright (c) 2013, goliatone
  * @author Goliatone <hello@goliatone.com>
  *
- * @license Please reference the MIT.md file at the root of this distribution
+ * @license Please reference the MIT.md file 
+ *          at the root of this distribution
  *
  * @package flatg
  */
@@ -123,11 +124,10 @@ class Route {
      */
     private function substituteFilter($matches) 
     {
-        if (isset($matches[1]) && isset($this->_filters[$matches[1]])) {
-                return $this->_filters[$matches[1]];
-            }
+        if (isset($matches[1]) && isset($this->_filters[$matches[1]])) 
+            return $this->_filters[$matches[1]];
         
-            return "([\w-]+)";
+        return "([\w-]+)";
     }
     
     /**
