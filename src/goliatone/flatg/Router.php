@@ -103,7 +103,6 @@ class Router {
 
         if(isset($args['methods']))
             $route->setMethods($args['methods']);
-        
 
         if(isset($args['filters']))
             $route->setFilters($args['filters']);
@@ -152,7 +151,6 @@ class Router {
         if(isset($args['methods']))
             $route->setMethods($args['methods']);
         
-
         if(isset($args['filters']))
             $route->setFilters($args['filters']);
             
@@ -167,7 +165,7 @@ class Router {
     /**
     * Matches the current request against mapped routes
     */
-    public function matchCurrentRequest() {
+    public function handleRequest() {
         //Dirty hack to support PUT/DELETE
         $requestMethod = (isset($_POST['_method']) &&
                          ($_method = strtoupper($_POST['_method'])) &&
