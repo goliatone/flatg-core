@@ -40,7 +40,8 @@ class_alias('goliatone\flatg\ArticleModel', 'ArticleModel');
  * @copyright Copyright (c) 2013, goliatone
  * @author Goliatone <hello@goliatone.com>
  *
- * @license Please reference the MIT.md file at the root of this distribution
+ * @license Please reference the MIT.md 
+ *          file at the root of this distribution
  *
  * @package flatg
  */
@@ -244,6 +245,7 @@ class FlatG {
         $output = self::renderView($layout, array_merge(array('content'=>$output), $data) );
         
         if($return) return $output;
+        //TODO: Output headers!! header (Content-Type:text/html; charset=UTF-8)
         else echo $output;
     }
     
@@ -253,7 +255,8 @@ class FlatG {
      */
     static public function renderJSON($data)
     {
-        
+        //TODO: Should we include CORS support?
+                
         if(array_key_exists('callback', $_REQUEST))
         {
             header('Content-Type: application/javascript');
