@@ -42,7 +42,7 @@ class Router {
      * TODO:RENAME TO BASE_URL
      * @var string
      */
-    private $basePath = '';
+    public $basePath = '';
     
     
     public $requestUrl;
@@ -70,8 +70,7 @@ class Router {
      */
     public function setBasePath($basePath) 
     {
-        $basePath = rtrim($basePath, "/");
-        $this->basePath = (string) $basePath;
+        $this->basePath = rtrim($basePath, "/");
     }
 
     /**
@@ -261,7 +260,7 @@ class Router {
      * @param array $params Optional array of parameters to use in URL
      * @return string The url to the route
      */
-    public function generate($routeName, array $params = array()) {
+    public function generate($routeName, array $params = array(), $absolute = FALSE) {
         
         // Check if route exists
         //TODO: Do we really want to kill the app here?!
@@ -301,9 +300,20 @@ class Router {
         if($url !== '/')
             GHelper::removeTrailingSlash($url);
         
+        if($absolute)
+            $url = $this->getBaseUrl($url);
+        
         return $url; 
     }
     
+    public function getBaseURL($append = '') {
+        $isHttps = ((array_key_exists('HTTPS', $_SERVER) 
+                && $_SERVER['HTTPS']) ||
+            (array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER) 
+                    && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+        );
+        return 'http' . ($isHttps ? 's' : '') .'://' . $_SERVER['SERVER_NAME'] . '/'.ltrim($append, '/');
+    }
     /**
      * Check if router has route by name.
      */
@@ -331,10 +341,8 @@ class Router {
         if (strpos($url, '://') === FALSE)
         {
             // Make the URI into a URL
-            $url = $this->basePath."/".$url;//.ltrim($url,"/");
-            //$url = URL::site($url, TRUE);
+            $url = $this->getBaseURL($url);
         }
-           
        
        header('Location: ' . $url, TRUE, $statusCode);
        exit( );
