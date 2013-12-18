@@ -205,7 +205,9 @@ class FlatG {
                 if(is_array($callback)) call_user_func($callback, $route->getAugmentedParams());
                 else $callback($route->getAugmentedParams());
                 
-            } else if(is_array($callback)){
+            } 
+            else if(is_array($callback))
+            {
                 $_Controller = $callback[0];
                 call_user_func($_Controller::$callback[1], $route->getAugmentedParams());
             } else throw new ErrorException('Internal Router Error 500 '.print_r($callback), 500);
@@ -224,7 +226,7 @@ class FlatG {
             //else, we assume our theme has a 404 view, and try that.
             else 
             {
-                // self::render('404', array());
+                self::render404();
             }
             
             //else, we just show an error message.
@@ -291,6 +293,18 @@ class FlatG {
         $view->setViewDirectory($dir);
         
         return $view->render($data);
+    }
+    
+    /**
+     * 
+     */
+    static public function render404()
+    {
+        //Just render the 404
+        header('HTTP/1.0 404 Not Found');
+        echo "<h1>404 Not Found</h1>";
+        echo "The page that you have requested could not be found.";
+        exit();
     }
     
     /**
