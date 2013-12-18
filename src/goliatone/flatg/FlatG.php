@@ -187,7 +187,7 @@ class FlatG {
         if(empty(self::$config))
             throw new ErrorException("FlatG needs to be initialized");
         
-        $route = self::$router->matchCurrentRequest();
+        $route = self::$router->handleRequest();
         
         if($route)
         {
