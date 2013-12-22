@@ -158,11 +158,10 @@ class View
     }
     
     
-    
     /**
      * 
      */
-    public function setGlobal($key, $value = NULL)
+    static public function setGlobal($key, $value = NULL)
     {
         if (is_array($key))
         {
@@ -182,7 +181,7 @@ class View
     /**
      * 
      */
-    public function bindGlobal($key, & $value)
+    static public function bindGlobal($key, & $value)
     {
         View::$_global_data[$key] =& $value;
         
