@@ -562,8 +562,12 @@ FileETag None
 <IfModule mod_rewrite.c>
 	# Turn on URL rewriting
     RewriteEngine On
-    # Local development, localhost, we could also add an entry to localhost and remap.
-    # RewriteBase /flat-g.com/
+    #####################
+    # IF you are using the install
+    # from a subdir www.site.com/flatg/
+    # then uncomment the next line.
+    #####################
+    # RewriteBase /flatg/
     RewriteBase /
 	# Protect application and system files from being viewed
     RewriteRule ^(?:backend|themes|config)\b.* index.php/$0 [L]
