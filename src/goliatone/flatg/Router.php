@@ -9,11 +9,15 @@ use goliatone\flatg\Route;
  * and map them to a controller action.
  * 
  * TODO: Standardize trailing slashes!!! Clean user routes to coform to it.
+ * TODO: Remove GHelper dependency.
+ * TODO: Move url validation to Route
  * 
+ *
  * @copyright Copyright (c) 2013, goliatone
  * @author Goliatone <hello@goliatone.com>
  *
- * @license Please reference the MIT.md file at the root of this distribution
+ * @license Please reference the MIT.md file 
+ *          at the root of this distribution
  *
  * @package flatg
  */
@@ -43,7 +47,6 @@ class Router {
      * @var string
      */
     public $basePath = '';
-    
     
     public $requestUrl;
     
@@ -165,6 +168,17 @@ class Router {
     * Matches the current request against mapped routes
     */
     public function handleRequest() {
+        //TODO: Move to Request class, we send a request param here.
+        /*$_PUT = array();
+        if( $_SERVER['REQUEST_METHOD'] == 'PUT' ) 
+        { 
+           parse_str(file_get_contents('php://input'), $_PUT);
+        }
+        $_DELETE = array();
+        if( $_SERVER['REQUEST_METHOD'] == 'DELETE' ) 
+        { 
+           parse_str(file_get_contents('php://input'), $_DELETE);
+        }*/
         //Dirty hack to support PUT/DELETE
         $requestMethod = (isset($_POST['_method']) &&
                          ($_method = strtoupper($_POST['_method'])) &&
