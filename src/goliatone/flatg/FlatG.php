@@ -28,7 +28,19 @@ class_alias('goliatone\flatg\GHtml', 'GHtml');
 class_alias('goliatone\flatg\GHelper', 'GHelper');
 class_alias('goliatone\flatg\ArticleModel', 'ArticleModel');
 /////////////////////////////////////////////////////////
-        
+
+/*
+define('REMOTE_VERSION_URL', 'http://flat-g.com/version.txt');
+
+// this is the version of the deployed script
+define('VERSION', '1.0.1');
+
+function isUpToDate()
+{
+    $remoteVersion=trim(file_get_contents(REMOTE_VERSION_URL));
+    return version_compare(VERSION, $remoteVersion, 'ge');
+}*/
+
 /**
  * Main interface. WIP.
  * 
@@ -95,13 +107,13 @@ class FlatG {
      */
     public function __constructor()
     {
-        echo "<h2>Hello world!</h2>";
     }
     
     static public function initialize($config)
     {
         self::$config = $config;
         
+        self::metadata('generator', 'FlatG');
         
         //TODO: Decouple, handle with plugin/events
         //TODO: Do we want to use simpleIOC?   
@@ -117,8 +129,6 @@ class FlatG {
         //TODO: make this for realz.
         self::$router = new Router();
         self::$router->setBasePath($config['router']['basePath']);
-        
-        return self::$markdown->transform("[FlatG](http://flatg.com/)");
     }
     
     /**
@@ -141,7 +151,20 @@ class FlatG {
         
         
         self::$_container[$id] = $containee;
+        
+        return $containee;
     }
+    
+    
+    static public function cache($id, $content = NULL)
+    {
+        if(!$content && ($cache = @file_get_contents(ROOT_DIR.'cache/'.$id))) return $cache;
+        
+        $handle = fopen(ROOT_DIR.'cache/'.$id, 'w') or die('Cannot open file:  '.$id);
+        fwrite($handle, $content);
+        fclose($handle);
+        return $content;
+    } 
     
     /**
      * 
@@ -175,6 +198,24 @@ class FlatG {
         
         return self::$router;
     }
+    
+    static public $_metadata = array();
+    static public function metadata($name=NULL, $content=NULL)
+    {
+        //we are setting a meta key
+        if(isset($name) && isset($content))
+            return self::$_metadata[$name] = $content;
+        //we will just render all
+        $out = array();
+        foreach(self::$_metadata as $name => $content)
+        {
+            $meta = GHtml::meta(array('name'=> $name, 'content'=>$content));
+            array_push($out, $meta);
+        }
+        
+        return implode(CHR(13).CHR(10).CHR(9), $out);
+    }
+    
     
     
     /**
@@ -221,7 +262,7 @@ class FlatG {
                 $route = self::$router->getRoute('404');
                 $callback = $route->getTarget();
                 if($callback && is_callable($callback)) call_user_func($callback);
-                else echo 404;
+                else self::render404();
             }
             //else, we assume our theme has a 404 view, and try that.
             else 
@@ -449,8 +490,13 @@ class GHtml
      */
     static public function __callStatic($tag, $args)
     {
-        $args[1] = isset($args[1]) ? self::attr($args[1]) : '';
-        return "<$tag{$args[1]}>{$args[0]}</$tag>\n";
+        $auto_close = preg_match('/img|input|hr|br|meta|link/', $tag);
+        $index = $auto_close ? 0 : 1;
+        $out  = "<{$tag} ";
+        $out .= isset($args[$index]) ? self::attr($args[$index]) : ''; 
+        $out .= $auto_close ? "/>" : ">{$args[0]}</{$tag}>";
+        
+        return $out;
     }
     
     /**
