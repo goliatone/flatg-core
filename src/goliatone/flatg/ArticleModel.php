@@ -129,7 +129,7 @@ class ArticleModel
     {
         if(!$path) $path = self::$path;
         if(!is_dir($path)) mkdir($path, 0755, TRUE);
-        
+        //http://www.php.net/manual/en/class.globiterator.php
         $dir = new DirectoryIterator($path);
         $articles = array();
         foreach($dir as $file){
