@@ -33,7 +33,10 @@ class Config extends \ArrayObject
     {
         if(is_array($initialize)) $this->set($initialize);
         else if(is_string($initialize)) $this->load($initialize);
-        // parent::__construct($this->_config, ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS);
+        
+        parent::__construct($this->_config,
+                            ArrayObject::STD_PROP_LIST | 
+                            ArrayObject::ARRAY_AS_PROPS);
     }
     
     /**
@@ -84,9 +87,6 @@ class Config extends \ArrayObject
         });
     }
     
-    
-    
-    
     /**
      * Register one or more configuration settings values.
      *
@@ -121,7 +121,8 @@ class Config extends \ArrayObject
     }
     
     /**
-     * 
+     * We mainly have this here to use on the 
+     * ArrayObject interface.
      */
     public function del($key)
     {
@@ -152,8 +153,20 @@ class Config extends \ArrayObject
      */
     public function load($filename)
     {
-        $config = $this->import($filename);
+        $config = $this->import($filename, array(), TRUE);
+        
+        if($this->_environment) return $this->_mergeEnvironment($filename, $config);
+        
         return $this->_configMerge($config);
+    }
+    
+    /**
+     * 
+     */
+    public function loadEnvironment($env = '', $condition = FALSE)
+    {
+        //If condition is not OK, then disable env.
+        $this->_environment = $condition ? $env : '';
     }
     
     /**
@@ -173,7 +186,7 @@ class Config extends \ArrayObject
         //Here we are handling just one type of config
         //PHP arrays. Abstract import by file ext.
         $config = include($filename);
-        //TODO: WHAT IF WE RETURN A Config INSTANCE?
+        //TODO: WHAT IF WE RETURN A Config INSTANCE from iclude?
         return is_array($config) ? array_replace_recursive($defaults, $config) : $defaults; 
     }
     
@@ -232,18 +245,36 @@ CONF;
     protected function _configMerge($config)
     {
         $this->_config = array_replace_recursive($this->_config, $config);
+        //Instead of passing around _config by reference, just update.
+        $this->exchangeArray($this->_config);
+        
         return $this;
     }
     /**
      * Merge the items in the given file into the items.
      *
-     * @param  array   $items
-     * @param  string  $file
-     * @return array
+     * @param  string  $filename
      */
-    protected function _mergeEnvironment(array $items, $file)
+    protected function _mergeEnvironment($filename, $items)
     {
-            return array_replace_recursive($items, $this->load($file));
+        //This should never be called, since we have a esctrict load
+        //on this->load
+        if(!file_exists($filename)) return $this->_configMerge($items);
+        // $info = pathinfo($filename);
+        
+        /*
+         * If `$_environment = 'development'`
+         * We want to go from `path/to/config.php` to
+         * `path/to/config.development.php`
+         */ 
+        $info = new \SplFileInfo($filename);
+        $ext  = $info->getExtension();
+        $pth  = $info->getPath().DIRECTORY_SEPARATOR;
+        $pth .= $info->getBasename($ext).$this->_environment.".".$ext;
+        
+        $items = array_replace_recursive($items, $this->import($pth));
+        
+        return $this->_configMerge($items);
     }
     
     /**
@@ -261,6 +292,11 @@ CONF;
 
         return $target;
     }
+    
+/////////////////////////////////////////////////////////////////////////////////
+// Getters & Setters
+/////////////////////////////////////////////////////////////////////////////////
+    
     
     /**
      * For now, this are here mainly 
@@ -280,7 +316,8 @@ CONF;
 // ArrayObject implementation
 /////////////////////////////////////////////////////////////////////////////////
     public function offsetGet($key) 
-    { 
+    {
+        echo "OFFSET GET: {$key}".PHP_EOL; 
         return $this->get($key);  
     } 
     public function offsetSet($key, $value) 

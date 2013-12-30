@@ -125,9 +125,12 @@ fu::test("Constructor can take a string that will load a config file", function(
         }
 });
 
+/////////////////////////////////////////////
+// ArrayObject implementation.
+/////////////////////////////////////////////
 
 /////////////////////////////////////////////
-// Lower level methods
+// Lower level methods.
 /////////////////////////////////////////////
 fu::test("Config::getNestedValue", function() {
         $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
