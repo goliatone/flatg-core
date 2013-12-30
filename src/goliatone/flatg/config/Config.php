@@ -21,7 +21,7 @@ class Config extends ArrayObject
     protected $_cache  = array();
     
     /** @var array  Config values.*/
-    protected $_config = array();
+    public $_config = array();
     
     /** @var string  Env mode.*/
     protected $_environment = '';
@@ -76,13 +76,22 @@ class Config extends ArrayObject
         }
         
         //We want an specific item, retrieve from cache or cache it.
+        $self = $this;
         $config = $this->_config;
-        return $this->_cacheGet($key, function() use($key, $default, &$config){
-            return $this->_getNestedValue( $this->_config, $key, $default);  
+        return $this->_cacheGet($key, function() use($self, $key, $default, &$config){
+            return $self->getNestedValue( $self->_config, $key, $default);  
         });
     }
     
+    public function getSource()
+    {
+        return $this->_config;
+    }
     
+    public function getCache()
+    {
+        return $this->_cache;
+    }
     
     /**
      * Register one or more configuration settings values.
@@ -227,22 +236,30 @@ CONF;
     /**
      * 
      */
-    protected function _configMerge($config, $source = FALSE, $ids = array())
+    public function _configMerge($config, $source = FALSE, &$ids = array())
     {
+        $this->_config = array_merge($config, $source);
+        return $this;
+        
         if($source === FALSE) $source = $this->_config;
+        
         //TODO: Remove foreach loop. 
         foreach($config as $key => $value)
         {
+            echo "HANDLE KEY {$key}\n";
             if(array_key_exists($key, $this->_config) && is_array($value))
             {
-                $this->_config[$key] = $this->_configMerge($config[$key],
-                                                           $this->_config[$key],
-                                                           array_push($key));
+                $ids[] = $key;
+                echo "==HANDLE KEY {$key}\n";
+                $source[$key] = $this->_configMerge($config[$key],
+                                                    $source[$key],
+                                                    $ids);
             }
             else 
             {
                 $this->_config[$key] = $value;
-                $key = implode('.', $ids);
+                $key = empty($ids) ? $key : implode('.', $ids);
+                echo "SET CACHE: {$key} TO {$value}\n";
                 $this->_cache[$key] = $value;
             }
 
@@ -256,21 +273,21 @@ CONF;
      * @param  string  $file
      * @return array
      */
-    protected function mergeEnvironment(array $items, $file)
+    protected function _mergeEnvironment(array $items, $file)
     {
-            return array_replace_recursive($items, $this->files->getRequire($file));
+            return array_replace_recursive($items, $this->load($file));
     }
     
     /**
-     * 
+     * Note that the visibility of this method is set to public
+     * to be accessible inside the cache closure.
      */
-    protected function _getNestedValue(&$target, $key, $default = NULL)
+    public function getNestedValue(&$target, $key, $default = NULL)
     {
         //Optimizations: explode in foreach loop bad.
         //foreach loop bad, use for, sizeof and array_keys :)        
         foreach(explode('.', $key) as $key) {
-            //if ( ! is_array($target) || ! array_key_exists($piece, $target))
-            if ( ! array_key_exists($key, $target)) return $default;
+            if ( !is_array($target) || ! array_key_exists($key, $target)) return $default;
             $target = &$target[$key];
         }
 
