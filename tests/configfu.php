@@ -164,8 +164,6 @@ fu::test("Config:load will autoload environment files", function() {
     $config->loadEnvironment('development', TRUE);
     $config->load($path);
     
-    echo json_encode($config->getSource()).PHP_EOL;
-    
     fu::equal($config->get("key1"), "value1_override", "Get key1 = value1_override OK.");
     fu::equal($config->get("key3.key31"), 31, "Get key3.key31 = 31 OK.");
     fu::equal($config->get("key3.key4"), 'value4_override', "Get key3.key4 = value4_override OK.");
