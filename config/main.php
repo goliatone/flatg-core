@@ -1,8 +1,9 @@
 <?php
 // include('./');
-//TODO:Also, make a FlatG::import('path') so we can cache and 
-//encapsulate logic...
 $passwords = include_once('.passwords');
+
+//TODO: We should not rely on APPATH AND ROOT_DIR. Also 
+//      what the heck! Naming conventions!!
 
 //TODO: Normalize basePath & base_url. Make robust.
 
