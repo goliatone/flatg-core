@@ -5,7 +5,7 @@ require './vendor/funkatron/funit/FUnit.php';
 use \FUnit\fu;
 use goliatone\flatg\config\Config;
 
-$config = include_once('./tests/fixtures/config.php');
+$config = include('./tests/fixtures/config/config.php');
 
 /*
  * Setup runs before each test.
@@ -74,26 +74,61 @@ fu::test("Set will cache any value after is retrieved.", function() {
         fu::equal($cache['key1'], 'value1', "Get key1 = value1 ok");
 });
 
-fu::test("Constructor can take a string that will load a config file", function() {
-        $path = './tests/fixtures/config.php';
-        $config = new Config($path);
-});
-
-fu::test("Config::configMerge", function() {
+fu::test("Config configuration override", function() {
         $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
-        $override = array('key1'=>'value_override', 'key3'=>array('key31'=>31));
+        $override = array('key1'=>'value1_override', 'key3'=>array('key31'=>31, 'key4'=>'value4_override'));
+        
         $config = new Config($defaults);        
         $config->set($override);
-        fu::equal($config->get('key1'), 'value_override', "Get key1 = value_override");
-        fu::equal($config->get('key3.key4'), 'value4', "Get key3.key31 = value4 ok");
+        
+        fu::equal($config->get('key1'), 'value1_override', "Get key1 = value1_override");
+        fu::equal($config->get('key3.key4'), 'value4_override', "Get key3.key31 = value4_override ok");
         fu::equal($config->get('key3.key31'), 31, "Get key3.key31 = 31 ok");
         fu::equal($config->get('key3.key5.key6'), 'value6', "Get key3.key5.key6 = value6 ok");
 });
 
+fu::test("Config:import will load a filename", function() {
+        $path = './tests/fixtures/config/config.php';
+        $config = new Config();
+        $defaults = $config->import($path);
+        fu::ok($defaults, "It should return the contents of the file.");
+        
+        $expected = array('key1'=>'value1');
+        $defaults = $config->import('fake/path.php', $expected);
+        fu::equal($defaults, $expected, "If no file found, return defaults parameter provided");       
+        
+        //TODO: Break into own test?
+        $merge = array('key1'=>'marege1', 'newKey'=>'newValue');
+        $defaults = $config->import($path, $merge);
+        fu::equal($defaults['key1'], 'value1');
+        fu::equal($defaults['newKey'], $merge['newKey']);
+        
+        //TODO: Break into own test?
+        $callback = function() use($config)
+        {
+            $config->import('fake/path.php', NULL, TRUE);
+        };
+        $params = array('fake/path.php', NULL, TRUE);
+        fu::throws($callback, 
+                   'InvalidArgumentException', 
+                   "It should throw an exception if
+                    file is required.");
+});
+
+fu::test("Constructor can take a string that will load a config file", function() {
+        $path = './tests/fixtures/config/config.php';
+        $defaults = include($path);
+        $config = new Config($path);
+        foreach($defaults as $key=>$value)
+        {
+            fu::equal($config->get($key), $value, "Get {$key} = {$value} OK.");
+        }
+});
+
+
 /////////////////////////////////////////////
 // Lower level methods
 /////////////////////////////////////////////
-
 fu::test("Config::getNestedValue", function() {
         $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
         $config = new Config();
