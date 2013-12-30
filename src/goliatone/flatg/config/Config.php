@@ -13,9 +13,9 @@
  * @license MIT
  * @package goliatone\flatg\config
  */
-use ArrayObject;
+use \ArrayObject;
 
-class Config extends ArrayObject
+class Config extends \ArrayObject
 {
     /** @var array  Cached keys.*/
     protected $_cache  = array();
@@ -29,9 +29,10 @@ class Config extends ArrayObject
     /**
      * 
      */
-    public function __construct($config = array())
+    public function __construct($initialize = NULL)
     {
-        if(!empty($config)) $this->set($config);
+        if(is_array($initialize)) $this->set($initialize);
+        else if(is_string($initialize)) $this->load($initialize);
         // parent::__construct($this->_config, ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS);
     }
     
@@ -83,15 +84,8 @@ class Config extends ArrayObject
         });
     }
     
-    public function getSource()
-    {
-        return $this->_config;
-    }
     
-    public function getCache()
-    {
-        return $this->_cache;
-    }
+    
     
     /**
      * Register one or more configuration settings values.
@@ -171,16 +165,16 @@ class Config extends ArrayObject
      */
     public function import($filename, $defaults = array(), $required = FALSE)
     {
-        if($required && !file_exists($filename))
+        if(!file_exists($filename))
         {
-            throw new InvalidArgumentException("Configuration file {$filename} not loaded");
+            if(! $required) return $defaults; 
+            throw new \InvalidArgumentException("Configuration file {$filename} not loaded");
         }
         //Here we are handling just one type of config
-        //PHP arrays. We could abstract the import per file
-        //extension.
-        $config = include_once($filename);
-        
-        return $config ? $config : $defaults; 
+        //PHP arrays. Abstract import by file ext.
+        $config = include($filename);
+        //TODO: WHAT IF WE RETURN A Config INSTANCE?
+        return is_array($config) ? array_replace_recursive($defaults, $config) : $defaults; 
     }
     
     public function save($path, $config=NULL)
@@ -191,7 +185,7 @@ class Config extends ArrayObject
         if(!$file->fwrite($output))
         {
             //We were unable to save the file 
-            throw new RuntimeException("Configuration file could not be saved to {$path}");
+            throw new \RuntimeException("Configuration file could not be saved to {$path}");
         }
         return $this;
     }
@@ -268,6 +262,20 @@ CONF;
         return $target;
     }
     
+    /**
+     * For now, this are here mainly 
+     * for unit testing. I might switch
+     * to use Reflection and remove them.
+     */
+    public function getSource()
+    {
+        return $this->_config;
+    }
+    
+    public function getCache()
+    {
+        return $this->_cache;
+    }
 /////////////////////////////////////////////////////////////////////////////////
 // ArrayObject implementation
 /////////////////////////////////////////////////////////////////////////////////
