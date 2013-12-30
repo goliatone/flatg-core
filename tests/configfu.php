@@ -245,7 +245,22 @@ fu::test("We can use a foreach loop", function(){
     
     fu::equal($i, $sizeof, "It should have looped a total of {$sizeof}");
 });
-
+/*
+fu::test("We can array_merge two config instances", function(){
+    $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
+    $override = array('key1'=>'value1_override', 'key3'=>array('key31'=>31, 'key4'=>'value4_override'));
+    
+    $expected = array_merge($defaults, $override);
+    
+    $config1 = new Config($defaults);
+    $config2 = new Config($override);
+    
+    $merged = array_merge((array)$config1, (array)$config2);
+    echo json_encode($merged).PHP_EOL;
+    
+    fu::equal($expected, $merged, "It should merge shit");
+});
+*/
 /////////////////////////////////////////////
 // Lower level methods.
 /////////////////////////////////////////////
