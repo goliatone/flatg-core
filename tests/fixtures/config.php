@@ -17,11 +17,11 @@ $passwords = array(
 //handle/simplify all path management!! look into an 
 //autoloader. Also, could we manage this in a helper?!
 return array(
-    'base_path' => APPPATH,
+    'base_path' => 'APPPATH',
     'view_dir'  => "themes",
     'theme' => 'gone',
     'articles_extension' =>'yaml',
-    'articles_path' => ROOT_DIR."articles",
+    'articles_path' => 'ROOT_DIR'."articles",
     //TODO: Rename this to asset_url.
     //TODO: This will break once we are online and 
     //we dont have the localhost/dreamcach.es this should be base url plu
