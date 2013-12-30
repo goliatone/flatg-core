@@ -3,19 +3,12 @@
  * Configuration fixture.
  */
 return array(
-    'basePath' => 'APPPATH',
-    'articlesExtension' =>'yaml',
-    'articlesPath' => "ROOT_DIR/articles",
-    'router' => array(
-        'basePath' => '/base/path'
-     ),
-    'backend_storage' =>array(
-        'default'=>'dropbox',
-        'dropbox'=>array(
-            'folder'=>'/articles/'
-        ),
-        'github'=>array(
-            'branch'=>'gh-pages'
-        ),
-    ),
+    'key1'=>'value1',
+    'key2'=>'value2', 
+    'key3'=>array(
+        'key4'=>'value4', 
+        'key5'=>array(
+            'key6'=>'value6'
+        )
+    )
 );
