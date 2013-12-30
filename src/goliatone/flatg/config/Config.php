@@ -35,8 +35,8 @@ class Config extends \ArrayObject
         else if(is_string($initialize)) $this->load($initialize);
         
         parent::__construct($this->_config,
-                            ArrayObject::STD_PROP_LIST | 
-                            ArrayObject::ARRAY_AS_PROPS);
+                            \ArrayObject::STD_PROP_LIST | 
+                            \ArrayObject::ARRAY_AS_PROPS);
     }
     
     /**
@@ -123,6 +123,7 @@ class Config extends \ArrayObject
     /**
      * We mainly have this here to use on the 
      * ArrayObject interface.
+     * REAME: This does not work for dot paths! 
      */
     public function del($key)
     {
@@ -286,7 +287,9 @@ CONF;
         //Optimizations: explode in foreach loop bad.
         //foreach loop bad, use for, sizeof and array_keys :)        
         foreach(explode('.', $key) as $key) {
-            if ( !is_array($target) || ! array_key_exists($key, $target)) return $default;
+            if ( ! is_array($target) || 
+                 ! array_key_exists($key, $target)) return $default;
+            
             $target = &$target[$key];
         }
 
@@ -317,7 +320,6 @@ CONF;
 /////////////////////////////////////////////////////////////////////////////////
     public function offsetGet($key) 
     {
-        echo "OFFSET GET: {$key}".PHP_EOL; 
         return $this->get($key);  
     } 
     public function offsetSet($key, $value) 
