@@ -24,7 +24,7 @@ fu::setup(function() use($config) {
 fu::teardown(function() {
     fu::reset_fixtures();
 });
-/*
+
 /////////////////////////////////////////////
 // Configuration FU
 /////////////////////////////////////////////
@@ -63,37 +63,37 @@ fu::test("Set can handle multidimensional arrays", function() {
         fu::equal($config->get('key3.key4'), 'value4', "Get key3.key4 4 ok");
         fu::equal($config->get('key3.key5.key6'), 'value6', "Get key3.key5.key6 6 ok");
 });
-
 fu::test("Set will cache any value after is retrieved.", function() {
         $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
-        $config = new Config();        
+        $config = new Config($defaults);        
         $cache = $config->getCache();
         fu::equal(empty($cache), TRUE, "Cache should be empty");
         
-        $config->set($defaults);
-        echo json_encode($cache).PHP_EOL;
-        fu::equal($cache['key1'], 'value1', "Get value 1 ok");
+        $config->get('key1');
+        $cache = $config->getCache();
+        fu::equal($cache['key1'], 'value1', "Get key1 = value1 ok");
 });
-
 
 fu::test("Constructor can take a string that will load a config file", function() {
         $path = './tests/fixtures/config.php';
         $config = new Config($path);
 });
-*/
+
+fu::test("Config::configMerge", function() {
+        $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
+        $override = array('key1'=>'value_override', 'key3'=>array('key31'=>31));
+        $config = new Config($defaults);        
+        $config->set($override);
+        fu::equal($config->get('key1'), 'value_override', "Get key1 = value_override");
+        fu::equal($config->get('key3.key4'), 'value4', "Get key3.key31 = value4 ok");
+        fu::equal($config->get('key3.key31'), 31, "Get key3.key31 = 31 ok");
+        fu::equal($config->get('key3.key5.key6'), 'value6', "Get key3.key5.key6 = value6 ok");
+});
 
 /////////////////////////////////////////////
 // Lower level methods
 /////////////////////////////////////////////
-fu::test("Config::configMerge", function() {
-        $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
-        $defaults2 = array('key1'=>'value2');
-        $config = new Config();        
-        $config->_configMerge($defaults, $defaults2);
-        echo json_encode($config->getSource()).PHP_EOL;
-        fu::equal($config['key1'], 'value1', "Get value 1 ok");
-});
-/*
+
 fu::test("Config::getNestedValue", function() {
         $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
         $config = new Config();
@@ -110,8 +110,6 @@ fu::test("Config::getNestedValue", function() {
         $value = $config->getNestedValue($defaults, 'key.does.not.exist', 'DEFAULT');
         fu::equal($value, 'DEFAULT', "If key does not exist, default value is returned");
 });
-*/
-
 
 $exit = fu::run();
 exit($exit);
