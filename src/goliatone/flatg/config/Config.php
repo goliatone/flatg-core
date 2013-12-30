@@ -27,7 +27,10 @@ class Config extends \ArrayObject
     protected $_environment = '';
     
     /**
-     * 
+     * Config constructor. 
+     *
+     * @param mixed $initialize Can be either an array
+     *                          or path to config file.
      */
     public function __construct($initialize = NULL)
     {
@@ -228,9 +231,10 @@ CONF;
 // Protected methods
 /////////////////////////////////////////////////////////////////////////////////
     /**
-     * @param string $key Setting's unique identifier
+     * @param string $key    Setting's unique identifier
      * @param mixed  $getter Function to retrieve value or the 
      *                       default value.
+     * @access protected
      * @return mixed
      */
     protected function _cacheGet($key, $getter)
@@ -240,8 +244,9 @@ CONF;
     }
     
     /**
-     * 
-     *
+     * @param  array    $config     Array object with want to merge 
+     * @access protected
+     * @return goliatone\flatg\config\Config
      */
     protected function _configMerge($config)
     {
@@ -254,7 +259,10 @@ CONF;
     /**
      * Merge the items in the given file into the items.
      *
-     * @param  string  $filename
+     * @param  string   $filename
+     * @param  array    $items     Array object with want to merge 
+     * @access protected
+     * @return goliatone\flatg\config\Config
      */
     protected function _mergeEnvironment($filename, $items)
     {
@@ -281,6 +289,13 @@ CONF;
     /**
      * Note that the visibility of this method is set to public
      * to be accessible inside the cache closure.
+     * 
+     * @param mixed     $target    Source array we traverse to 
+     *                             find the given key.
+     * @param string    $key       Unique identifier to resource.
+     *                             It can be a path with dot notation.
+     * @param mixed     $default   Default value if no resource is
+     *                             found. It we don't set it is NULL
      */
     public function getNestedValue(&$target, $key, $default = NULL)
     {
@@ -311,6 +326,9 @@ CONF;
         return $this->_config;
     }
     
+    /**
+     * Access to the cache array.
+     */
     public function getCache()
     {
         return $this->_cache;
@@ -318,15 +336,25 @@ CONF;
 /////////////////////////////////////////////////////////////////////////////////
 // ArrayObject implementation
 /////////////////////////////////////////////////////////////////////////////////
+    /**
+     * ArrayObject interface.
+     */
     public function offsetGet($key) 
     {
         return $this->get($key);  
     } 
-    public function offsetSet($key, $value) 
+    
+    /**
+     * ArrayObject interface. 
+     */
+    public function offsetSet( $key , $value) 
     {
         return $this->set($key, $value); 
     }
-     
+    
+    /**
+     * ArrayObject interface. 
+     */
     public function offsetUnset($key)
     { 
         return $this->del($key); 
