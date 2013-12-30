@@ -21,7 +21,7 @@ class Config extends ArrayObject
     protected $_cache  = array();
     
     /** @var array  Config values.*/
-    public $_config = array();
+    protected $_config = array();
     
     /** @var string  Env mode.*/
     protected $_environment = '';
@@ -31,7 +31,7 @@ class Config extends ArrayObject
      */
     public function __construct($config = array())
     {
-        $this->set($config);
+        if(!empty($config)) $this->set($config);
         // parent::__construct($this->_config, ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS);
     }
     
@@ -77,9 +77,9 @@ class Config extends ArrayObject
         
         //We want an specific item, retrieve from cache or cache it.
         $self = $this;
-        $config = $this->_config;
+        $config = $this->_config; //In PHP 5.4 we can Closure.bind
         return $this->_cacheGet($key, function() use($self, $key, $default, &$config){
-            return $self->getNestedValue( $self->_config, $key, $default);  
+            return $self->getNestedValue($config, $key, $default);  
         });
     }
     
@@ -108,7 +108,6 @@ class Config extends ArrayObject
      */
     public function set($key, $value = NULL)
     {
-        //TODO: This should be array_merge_recursive, prob custom!
         if(is_array($key)) return $this->_configMerge($key);
         
         $this->_cache[$key] = $value;
@@ -229,41 +228,16 @@ CONF;
     protected function _cacheGet($key, $getter)
     {
         if(array_key_exists($key, $this->_cache)) return $this->_cache[$key];
-        
         return $this->_cache[$key] = is_callable($getter) ? $getter() : $getter;
     }
     
     /**
      * 
+     *
      */
-    public function _configMerge($config, $source = FALSE, &$ids = array())
+    protected function _configMerge($config)
     {
-        $this->_config = array_merge($config, $source);
-        return $this;
-        
-        if($source === FALSE) $source = $this->_config;
-        
-        //TODO: Remove foreach loop. 
-        foreach($config as $key => $value)
-        {
-            echo "HANDLE KEY {$key}\n";
-            if(array_key_exists($key, $this->_config) && is_array($value))
-            {
-                $ids[] = $key;
-                echo "==HANDLE KEY {$key}\n";
-                $source[$key] = $this->_configMerge($config[$key],
-                                                    $source[$key],
-                                                    $ids);
-            }
-            else 
-            {
-                $this->_config[$key] = $value;
-                $key = empty($ids) ? $key : implode('.', $ids);
-                echo "SET CACHE: {$key} TO {$value}\n";
-                $this->_cache[$key] = $value;
-            }
-
-        }
+        $this->_config = array_replace_recursive($this->_config, $config);
         return $this;
     }
     /**
