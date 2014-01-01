@@ -264,20 +264,20 @@ fu::test("We can array_merge two config instances", function(){
 /////////////////////////////////////////////
 // Lower level methods.
 /////////////////////////////////////////////
-fu::test("Config::getNestedValue", function() {
+fu::test("Config::solveKeyPath", function() {
     $defaults = array('key1'=>'value1', 'key2'=>'value2', 'key3'=>array('key4'=>'value4', 'key5'=>array('key6'=>'value6')));
     $config = new Config();
     
-    $value = $config->getNestedValue($defaults, 'key3.key4');
+    $value = $config->solveKeyPath($defaults, 'key3.key4');
     fu::equal($value, $defaults['key3']['key4'], "Nested value key3.key4");
     
-    $value = $config->getNestedValue($defaults, 'key3.key5.key6');
+    $value = $config->solveKeyPath($defaults, 'key3.key5.key6');
     fu::equal($value, $defaults['key3']['key5']['key6'], "Nested value key3.key5.key6");
     
-    $value = $config->getNestedValue($defaults, 'key.does.not.exist');
+    $value = $config->solveKeyPath($defaults, 'key.does.not.exist');
     fu::strict_equal($value, NULL, "If key does not exist and no default value is provided, return NULL");
     
-    $value = $config->getNestedValue($defaults, 'key.does.not.exist', 'DEFAULT');
+    $value = $config->solveKeyPath($defaults, 'key.does.not.exist', 'DEFAULT');
     fu::equal($value, 'DEFAULT', "If key does not exist, default value is returned");
 });
 
