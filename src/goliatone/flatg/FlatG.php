@@ -721,9 +721,8 @@ class GLogger
     
     /**
      * Constructor
-     * @param  mixed $writer
      */
-    public function __construct($writer = NULL)
+    public function __construct()
     {
     }
    
