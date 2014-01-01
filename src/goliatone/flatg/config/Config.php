@@ -67,7 +67,8 @@ class Config extends \ArrayObject
      *
      * @param  string $key Setting's unique identifier.
      * @param  mixed  $default The default value.
-     * @return mixed
+     * @return mixed  It will setting value or `$default`
+     *                if undefined.
      */
     public function get($key = NULL, $default = NULL)
     {
@@ -86,7 +87,7 @@ class Config extends \ArrayObject
         $self = $this;
         $config = $this->_config; //In PHP 5.4 we can Closure.bind
         return $this->_cacheGet($key, function() use($self, $key, $default, &$config){
-            return $self->getNestedValue($config, $key, $default);  
+            return $self->solveKeyPath($config, $key, $default);  
         });
     }
     
@@ -101,7 +102,7 @@ class Config extends \ArrayObject
      *
      * @param  string $key Setting's unique identifier.
      * @param  mixed  $value The default value.
-     * @return goliatone\flatg\config\Config
+     * @return goliatone\flatg\config\Config Chainable method
      */
     public function set($key, $value = NULL)
     {
@@ -110,7 +111,7 @@ class Config extends \ArrayObject
         $this->_cache[$key] = $value;
         
         $target = &$this->_config;
-
+        //TODO: We should be able to have setPath
         $keys = explode('.', $key);   
         $i = sizeof($keys);
         foreach($keys as $key)
@@ -139,6 +140,18 @@ class Config extends \ArrayObject
     /**
      * 
      */
+    public function load($filename)
+    {
+        $config = $this->import($filename, array(), TRUE);
+        
+        if($this->_environment) return $this->_mergeEnvironment($filename, $config);
+        
+        return $this->_configMerge($config);
+    }
+    
+    /**
+     * TODO: Do we want this here?
+     */
     public function init($target, $key, $defaults = array())
     {
         $values = $this->get($key);
@@ -153,19 +166,8 @@ class Config extends \ArrayObject
     }
     
     /**
-     * 
-     */
-    public function load($filename)
-    {
-        $config = $this->import($filename, array(), TRUE);
-        
-        if($this->_environment) return $this->_mergeEnvironment($filename, $config);
-        
-        return $this->_configMerge($config);
-    }
-    
-    /**
-     * 
+     * TODO Rename or make this actually load something :P
+     * Actually, it would be a setEnvironementIf('develop', DEBUG)
      */
     public function loadEnvironment($env = '', $condition = FALSE)
     {
@@ -235,7 +237,7 @@ CONF;
      * @param mixed  $getter Function to retrieve value or the 
      *                       default value.
      * @access protected
-     * @return mixed
+     * @return mixed         Returns the result after accessing cache.
      */
     protected function _cacheGet($key, $getter)
     {
@@ -246,7 +248,7 @@ CONF;
     /**
      * @param  array    $config     Array object with want to merge 
      * @access protected
-     * @return goliatone\flatg\config\Config
+     * @return goliatone\flatg\config\Config Chainable method
      */
     protected function _configMerge($config)
     {
@@ -259,10 +261,10 @@ CONF;
     /**
      * Merge the items in the given file into the items.
      *
-     * @param  string   $filename
+     * @param  string   $filename  Path to original config file
      * @param  array    $items     Array object with want to merge 
      * @access protected
-     * @return goliatone\flatg\config\Config
+     * @return goliatone\flatg\config\Config Chainable method
      */
     protected function _mergeEnvironment($filename, $items)
     {
@@ -297,7 +299,7 @@ CONF;
      * @param mixed     $default   Default value if no resource is
      *                             found. It we don't set it is NULL
      */
-    public function getNestedValue(&$target, $key, $default = NULL)
+    public function solveKeyPath(&$target, $key, $default = NULL)
     {
         //Optimizations: explode in foreach loop bad.
         //foreach loop bad, use for, sizeof and array_keys :)        
