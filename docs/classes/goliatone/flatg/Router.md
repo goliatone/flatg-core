@@ -3,11 +3,13 @@
 and map them to a controller action.
 
 _Copyright (c) 2013, goliatone_.
-_Please reference the MIT.md file at the root of this distribution_
+_Please reference the MIT.md file_
 
 ### Details
 
 TODO: Standardize trailing slashes!!! Clean user routes to coform to it.
+TODO: Remove GHelper dependency.
+TODO: Move url validation to Route
 
 #### Namespace
 
@@ -20,6 +22,11 @@ TODO: Standardize trailing slashes!!! Clean user routes to coform to it.
 	<tr>
 		<th>Alias</th>
 		<th>Namespace / Class</th>
+	</tr>
+	
+	<tr>
+		<td>Exception</td>
+		<td>Exception</td>
 	</tr>
 	
 	<tr>
@@ -59,17 +66,57 @@ TODO: Standardize trailing slashes!!! Clean user routes to coform to it.
 ### Instance Properties
 #### <span style="color:#6a6e3d;">$_routes</span>
 
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2026   13706704   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2033   13710536   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
+
 Array
 
 #### <span style="color:#6a6e3d;">$_preprocessors</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2026   13706704   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2033   13710536   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
 
 Array
 
 #### <span style="color:#6a6e3d;">$namedRoutes</span>
 
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2026   13706704   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2033   13710536   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
+
 Array
 
 #### <span style="color:#6a6e3d;">$basePath</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2026   13706704   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2033   13710536   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
 
 Array
 
@@ -94,6 +141,16 @@ Array
 <hr />
 
 #### <span style="color:#3e6a6e;">setBasePath()</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php on line 7
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2026   13706704   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2042   13715752   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:43
 
 Array
 
@@ -194,7 +251,7 @@ Maps the given URL to the given target.
 
 <hr />
 
-#### <span style="color:#3e6a6e;">matchCurrentRequest()</span>
+#### <span style="color:#3e6a6e;">handleRequest()</span>
 
 Matches the current request against mapped routes
 
@@ -283,7 +340,14 @@ Reverse route a named route
 
 <hr />
 
+#### <span style="color:#3e6a6e;">getBaseURL()</span>
+
+
+<hr />
+
 #### <span style="color:#3e6a6e;">hasRoute()</span>
+
+Check if router has route by name.
 
 
 <hr />

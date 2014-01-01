@@ -40,6 +40,11 @@
 		<td>goliatone\flatg\controllers\DefaultController</td>
 	</tr>
 	
+	<tr>
+		<td>Event</td>
+		<td>goliatone\events\Event</td>
+	</tr>
+	
 </table>
 
 
@@ -84,6 +89,16 @@ TODO: Remove?
 <hr />
 
 #### <span style="color:#3e6a6e;">ensureTrailingSlash()</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php on line 7
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.1975   13706984   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.1980   13717688   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:37
 
 Array
 

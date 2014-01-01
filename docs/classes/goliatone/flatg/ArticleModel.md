@@ -134,6 +134,11 @@ _Please reference the MIT.md file at the root of this distribution_
 
 <hr />
 
+#### <span style="color:#3e6a6e;">formatDate()</span>
+
+
+<hr />
+
 #### <span style="color:#3e6a6e;">getExcerpt()</span>
 
 
@@ -145,6 +150,11 @@ _Please reference the MIT.md file at the root of this distribution_
 <hr />
 
 #### <span style="color:#3e6a6e;">getFilename()</span>
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">__toString()</span>
 
 
 

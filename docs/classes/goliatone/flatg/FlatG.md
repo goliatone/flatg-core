@@ -2,7 +2,7 @@
 ## Main interface. WIP.
 
 _Copyright (c) 2013, goliatone_.
-_Please reference the MIT.md file at the root of this distribution_
+_Please reference the MIT.md_
 
 ### Details
 
@@ -46,6 +46,11 @@ and instead of doing self::$config['prop']
 	<tr>
 		<td>DefaultController</td>
 		<td>goliatone\flatg\controllers\DefaultController</td>
+	</tr>
+	
+	<tr>
+		<td>Event</td>
+		<td>goliatone\events\Event</td>
 	</tr>
 	
 </table>
@@ -97,6 +102,14 @@ Articles facade.
 
 Markdown instance
 
+#### <span style="color:#6a6e3d;">$_messages</span>
+
+TODO: Make it for real!
+
+#### <span style="color:#6a6e3d;">$logger</span>
+
+#### <span style="color:#6a6e3d;">$_metadata</span>
+
 
 
 
@@ -110,7 +123,19 @@ Markdown instance
 
 <hr />
 
+#### <span style="color:#3e6a6e;">logger()</span>
+
+
+<hr />
+
 #### <span style="color:#3e6a6e;">container()</span>
+
+Simple registry.
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">cache()</span>
 
 
 <hr />
@@ -197,6 +222,11 @@ Map url resource to handler implementation.
 
 <hr />
 
+#### <span style="color:#3e6a6e;">metadata()</span>
+
+
+<hr />
+
 #### <span style="color:#3e6a6e;">run()</span>
 
 TODO: dry, CLEAN.
@@ -212,10 +242,16 @@ TODO: Use EventDispatcher, foget callback madness!
 
 #### <span style="color:#3e6a6e;">renderJSON()</span>
 
+TODO: Normalize signature, use same for all
+renderX methods.
+
 
 <hr />
 
 #### <span style="color:#3e6a6e;">renderXML()</span>
+
+TODO: Normalize signature, use same for all
+renderX methods.
 
 
 <hr />
@@ -223,6 +259,11 @@ TODO: Use EventDispatcher, foget callback madness!
 #### <span style="color:#3e6a6e;">renderView()</span>
 
 TODO: Nested render views?
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">render404()</span>
 
 
 <hr />

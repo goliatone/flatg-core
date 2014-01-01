@@ -2,7 +2,7 @@
 ## Route class.
 
 _Copyright (c) 2013, goliatone_.
-_Please reference the MIT.md file at the root of this distribution_
+_Please reference the MIT.md file_
 
 ### Details
 
@@ -43,25 +43,85 @@ TODO: Review syntax and method naming. set/get?
 ### Instance Properties
 #### <span style="color:#6a6e3d;">$_url</span>
 
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2001   13705248   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2007   13710104   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
+
 Array
 
 #### <span style="color:#6a6e3d;">$_methods</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2001   13705248   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2007   13710104   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
 
 Array
 
 #### <span style="color:#6a6e3d;">$_target</span>
 
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2001   13705248   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2007   13710104   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
+
 Array
 
 #### <span style="color:#6a6e3d;">$_name</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2001   13705248   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2007   13710104   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
 
 Array
 
 #### <span style="color:#6a6e3d;">$_filters</span>
 
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2001   13705248   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2007   13710104   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
+
 Array
 
 #### <span style="color:#6a6e3d;">$_parameters</span>
+
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php on line 5
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2001   13705248   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2007   13710104   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_properties.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:19
 
 Array
 

@@ -32,6 +32,28 @@
 
 
 
+### Instance Methods
+<hr />
+
+#### <span style="color:#3e6a6e;">__construct()</span>
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">getTemplatesPath()</span>
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">getResourcesPath()</span>
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">appendBasePath()</span>
+
+
+
 
 
 

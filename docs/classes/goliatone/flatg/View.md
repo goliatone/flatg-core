@@ -2,7 +2,7 @@
 ## View class.
 
 _Copyright (c) 2013, goliatone_.
-_Please reference the MIT.md file at the root of this distribution_
+_Please reference the MIT.md_
 
 #### Namespace
 
@@ -68,6 +68,18 @@ _Please reference the MIT.md file at the root of this distribution_
 
 
 ## Methods
+### Static Methods
+<hr />
+
+#### <span style="color:#3e6a6e;">setGlobal()</span>
+
+
+<hr />
+
+#### <span style="color:#3e6a6e;">bindGlobal()</span>
+
+
+
 
 ### Instance Methods
 <hr />
@@ -104,6 +116,16 @@ _Please reference the MIT.md file at the root of this distribution_
 
 #### <span style="color:#3e6a6e;">addPartial()</span>
 
+
+Notice: Array to string conversion in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php on line 7
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2067   13695136   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2079   13705840   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:43
+
 Array
 
 ###### Parameters
@@ -134,7 +156,19 @@ Array
 				$view
 			</td>
 			<td>
-									<a href="./">View</a>
+				
+Notice: Undefined offset: 0 in /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php on line 215
+
+Call Stack:
+    0.0003     236640   1. {main}() /Users/emilianoburgos/Development/PHP/flatg/sage.php:0
+    0.1714   13684008   2. Dotink\Sage\Writer->buildDocumentation() /Users/emilianoburgos/Development/PHP/flatg/sage.php:22
+    0.1719   13688184   3. Dotink\Sage\Writer->write() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:109
+    0.2067   13695136   4. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/src/Writer.php:446
+    0.2079   13705840   5. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class.php:43
+    0.2083   13721048   6. include('/Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_method_parameters.php') /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_methods.php:19
+    0.2084   13720544   7. Dotink\Sage\Writer->getLink() /Users/emilianoburgos/Development/PHP/flatg/vendor/dotink/sage/templates/class_method_parameters.php:52
+
+					<a href="./">View</a>
 				
 			</td>
 			<td>
@@ -149,16 +183,6 @@ Array
 <hr />
 
 #### <span style="color:#3e6a6e;">getPath()</span>
-
-
-<hr />
-
-#### <span style="color:#3e6a6e;">setGlobal()</span>
-
-
-<hr />
-
-#### <span style="color:#3e6a6e;">bindGlobal()</span>
 
 
 

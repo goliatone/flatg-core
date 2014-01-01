@@ -40,6 +40,11 @@
 		<td>goliatone\flatg\controllers\DefaultController</td>
 	</tr>
 	
+	<tr>
+		<td>Event</td>
+		<td>goliatone\events\Event</td>
+	</tr>
+	
 </table>
 
 
