@@ -62,6 +62,10 @@ system information to detect/diagnose.
 
 ### Implement simple IOC?
 
+### Excerpt
+Remove HTML excerpt. Use simple <!-- more --> comment
+in content, and we split there.
+
 ### Pages: Build menu from dir structure. 
 
 ### Asset manager and publisher
@@ -105,6 +109,18 @@ _partially_ static(?)
 ### Partials
 How do we implement partials? We want to have partials
 such as _header / _footer / _ganalytics
+
+### HTACCESS
+In order for our cached files to have mymetype, just add a default
+type.
+RewriteCond cache/%{REQUEST_FILENAME} !-f
+<FilesMatch "^[^\.]*$"> 
+	Header set Content-type "application/html; charset=utf-8" 
+</FilesMatch>
+Add DefaultType html
+http://stackoverflow.com/questions/7263283/how-to-add-header-content-type-to-static-pages-which-doesnt-have-extensions
+http://stackoverflow.com/questions/9379530/append-path-directory-to-url-using-htaccess
+http://stackoverflow.com/questions/15917258/remove-php-from-urls-with-htaccess
 
 
 #####
