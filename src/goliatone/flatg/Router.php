@@ -240,7 +240,11 @@ class Router {
     }
     
     /**
-     * Extract params from current request and set route's 
+     * Extract params from current request and set route's
+     *
+     * @param $route
+     * @param $matches
+     * @return Route
      */
     public function setRouteParams($route, $matches)
     {
@@ -266,13 +270,15 @@ class Router {
 
         return $route;
     }
-    
+
     /**
      * Reverse route a named route
-     * 
-     * @param string $route_name The name of the route to reverse route.
+     *
+     * @param $routeName The name of the route to reverse route.
      * @param array $params Optional array of parameters to use in URL
-     * @return string The url to the route
+     * @param bool $absolute
+     * @return mixed|string The url to the route
+     * @throws \Exception
      */
     public function generate($routeName, array $params = array(), $absolute = FALSE) {
         
@@ -319,7 +325,11 @@ class Router {
         
         return $url; 
     }
-    
+
+    /**
+     * @param string $append
+     * @return string
+     */
     public function getBaseURL($append = '') {
         $isHttps = ((array_key_exists('HTTPS', $_SERVER) 
                 && $_SERVER['HTTPS']) ||
@@ -328,16 +338,22 @@ class Router {
         );
         return 'http' . ($isHttps ? 's' : '') .'://' . $_SERVER['SERVER_NAME'] . '/'.ltrim($append, '/');
     }
+
     /**
+     *
      * Check if router has route by name.
+     *
+     * @param $routeName
+     * @return bool
      */
     public function hasRoute($routeName)
     {
         return isset($this->namedRoutes[$routeName]);
     }
-    
+
     /**
-     * 
+     * @param $routeName
+     * @return Route
      */
     public function getRoute($routeName)
     {
