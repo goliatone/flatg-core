@@ -11,3 +11,4 @@ themes/*
 vendor/*
 
 config/.passwords
+.idea
