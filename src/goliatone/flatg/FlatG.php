@@ -63,7 +63,7 @@ class FlatG {
      * Static config holder
      *
      * @access static
-     * @var array
+     * @var Config|array
      */
     static public $config = array();
     
@@ -79,7 +79,7 @@ class FlatG {
      * Router facade.
      *
      * @access static
-     * @var array
+     * @var Router
      */
     static public $router;
     
@@ -95,7 +95,7 @@ class FlatG {
      * Markdown instance
      *
      * @access static
-     * @var array
+     * @var Markdown
      */
     static public $markdown;
     
@@ -108,11 +108,15 @@ class FlatG {
     public function __constructor()
     {
     }
-    
+
+    static public $initialized = FALSE;
     static public function initialize($config)
     {
         self::$config = $config;
-        
+
+        if(self::$initialized) return;
+        self::$initialized = TRUE;
+
         self::metadata('generator', 'FlatG');
         
         //TODO: Decouple, handle with plugin/events
@@ -135,6 +139,9 @@ class FlatG {
      * TODO: Make it for real!
      */
     static private $_messages = array();
+    /**
+     * @var GLogger
+     */
     static public $logger;
     static public function logger($id='default')
     {
@@ -154,20 +161,29 @@ class FlatG {
         
         return $containee;
     }
-    
-    
+
+    /**
+     * Simple cache interface.
+     *
+     * @param string $id Cache ID key.
+     * @param string $content Content to be saved
+     *
+     * @return null|string
+     */
     static public function cache($id, $content = NULL)
     {
         if(!$content && ($cache = @file_get_contents(ROOT_DIR.'cache/'.$id))) return $cache;
-        
+
+        if(is_callable($content)) $content = call_user_func($content);
+
         $handle = fopen(ROOT_DIR.'cache/'.$id, 'w') or die('Cannot open file:  '.$id);
         fwrite($handle, $content);
         fclose($handle);
         return $content;
-    } 
-    
+    }
+
     /**
-     * 
+     * @return string
      */
     static public function scriptURL()
     {
@@ -185,12 +201,15 @@ class FlatG {
      */
     static public function map($routeUrl, $target = '', array $args = array())
     {
-        self::$router->map($routeUrl, $target, $args);        
+        self::$router->map($routeUrl, $target, $args);
         return self::$router;
     }
-    
+
     /**
-     * 
+     * @param $routeUrl
+     * @param string $target
+     * @param array $args
+     * @return Router
      */
     static public function preprocess($routeUrl, $target = '', array $args = array())
     {
@@ -200,6 +219,12 @@ class FlatG {
     }
     
     static public $_metadata = array();
+
+    /**
+     * @param null $name
+     * @param null $content
+     * @return null|string
+     */
     static public function metadata($name=NULL, $content=NULL)
     {
         //we are setting a meta key
@@ -220,7 +245,11 @@ class FlatG {
     
     /**
      * TODO: dry, CLEAN.
-     * TODO: Use EventDispatcher, foget callback madness!
+     * TODO: Use EventDispatcher,
+     *       forget callback madness!
+     *
+     *
+     * @throws \ErrorException
      */
     static public function run()
     {
@@ -229,7 +258,7 @@ class FlatG {
             throw new ErrorException("FlatG needs to be initialized");
         
         $route = self::$router->handleRequest();
-        
+
         if($route)
         {
             ////// TODO: Implement real event flow
@@ -275,7 +304,12 @@ class FlatG {
     }
 
     /**
-     * 
+     * @param string $name      View ID.
+     * @param array  $data      Context data, expanded in view.
+     * @param bool   $layout    Parent layout.
+     * @param bool   $return    Do we return string or print.
+     *
+     * @return string
      */
     static public function render($name, $data = array(), $layout = FALSE, $return = FALSE)
     {
@@ -295,6 +329,8 @@ class FlatG {
     /**
      * TODO: Normalize signature, use same for all
      *       renderX methods.
+     *
+     * @param $data
      */
     static public function renderJSON($data)
     {
@@ -315,6 +351,8 @@ class FlatG {
     /**
      * TODO: Normalize signature, use same for all
      *       renderX methods.
+     *
+     * @param $data
      */
     static public function renderXML($data)
     {
@@ -345,7 +383,7 @@ class FlatG {
         header('HTTP/1.0 404 Not Found');
         echo "<h1>404 Not Found</h1>";
         echo "The page that you have requested could not be found.";
-        exit();
+        exit;
     }
     
     /**
@@ -492,7 +530,7 @@ class GHtml
     {
         $auto_close = preg_match('/img|input|hr|br|meta|link/', $tag);
         $index = $auto_close ? 0 : 1;
-        $out  = "<{$tag} ";
+        $out  = "<{$tag}";
         $out .= isset($args[$index]) ? self::attr($args[$index]) : ''; 
         $out .= $auto_close ? "/>" : ">{$args[0]}</{$tag}>";
         
@@ -739,6 +777,13 @@ class GLogger
     public function log($level, $object, $context = array())
     {
         array_push(self::$messages, array('l'=>$level, 'o'=>$object, 'c'=>$context));
+        $time = date("[g:i:sA] ", time());
+        echo "$time $level".print_r($object, true)."\n";
+    }
+
+    public function publish()
+    {
+
     }
     
     public function __toString()
