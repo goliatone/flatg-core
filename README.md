@@ -21,3 +21,7 @@ To generate docs, run `php sage.php ./src ./docs`
 
 
 Use [flatten](https://github.com/Anahkiasen/flatten) cache.
+
+
+###
+`paths` All paths should have a trailing `DIRECTORY_SEPARATOR`
