@@ -149,4 +149,10 @@ class Route {
     public function setParameters(array $parameters) {
         $this->_parameters = $parameters;
     }
+
+
+    public function __toString()
+    {
+        return "[object Route: name".$this->_name."]";
+    }
 }
