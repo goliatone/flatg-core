@@ -8,40 +8,56 @@ use Exception;
  * @copyright Copyright (c) 2013, goliatone
  * @author Goliatone <hello@goliatone.com>
  *
- * @license Please reference the MIT.md 
+ * @license Please reference the LICENSE-MIT
  *          file at the root of this distribution
  *
  * @package flatg
  */
 class View
 {
+    /**
+     *
+     */
     const FILE_EXTENSION = '.php';
-    
-    public static $_global_data;
+
+    /**
+     * Global container to be extracted
+     * whenever a View instance is
+     * included
+     *
+     * @var array
+     * @access private
+     */
+    public static $_global_data = array();
     
     /**
      * 
-     * @private
+     * @access private
      */
     protected $_partials;
     
     /**
      * 
-     * @private
+     * @access private
      */
     protected $_viewDirectory;
     
     /**
-     * 
+     * View's filename
+     * @access private
      */
     protected $_filename;
-    
-    public $data;
-    
+
     /**
-     * 
+     * Data payload for the view.
+     * @var array
      */
-    public function __construct($filename = FALSE)
+    public $data;
+
+    /**
+     * @param string $filename
+     */
+    public function __construct($filename = '')
     {
        $this->data = array();
        
@@ -52,9 +68,16 @@ class View
            $this->setFilename($filename);
        }
     }
-    
+
     /**
-     * 
+     *
+     * @param string $filename  View's filename.
+     * @param array  $data      Data to be extracted in the view's
+     *                          context
+     *
+     * @return string
+     *
+     * @throws \Exception
      */
     public function render($filename, $data = array())
     {
@@ -69,7 +92,9 @@ class View
         }
         
         $this->data = $data;
+
         extract($this->data, EXTR_SKIP);
+
         foreach ($this->_partials as $viewName => $view) {
             // $view->set("layout", $this);
             $this->data[$viewName] = $view->render();
@@ -104,17 +129,19 @@ class View
         return ob_get_clean();
         
     }
-    
+
     /**
-     * 
+     * @return string Directory containing the view
      */
     public function getViewDirectory()
     {
          return $this->_viewDirectory;
     }
-    
+
     /**
-     * 
+     * @param string $dir
+     * @return $this
+     * @throws \Exception
      */
     public function setViewDirectory($dir)
     {
@@ -124,44 +151,55 @@ class View
         
         return $this;
     }
-    
+
+    /**
+     * @param $filename
+     * @return $this
+     */
     public function setFilename($filename)
     {
         $this->_filename = $filename.self::FILE_EXTENSION;
         return $this;
     }
-    
+
+    /**
+     * @return string Filename
+     */
     public function getFilename()
     {
         return $this->_filename;
     }
     
     /**
-     * Add a view using a given name. 
+     * Add a view using a given name.
+     *
      * @param string $name Name of the view used in the layout
-     * @param View $view The instance to be associated with the name
+     * @param View   $view The instance to be associated with the name
+     * @return $this
      */
     public function addPartial($name, View $view) {
         $this->_partials[$name] = $view;
         
         return $this;
     }
-    
-    
-    
+
+
     /**
-     * 
+     * @param string $filename
+     * @return string
      */
-    public function getPath($filename = FALSE)
+    public function getPath($filename = '')
     {
-        return $this->_viewDirectory.DIRECTORY_SEPARATOR.$this->getFilename(); 
+        $filename = $filename ? $filename : $this->getFilename();
+        return realpath($this->_viewDirectory.DIRECTORY_SEPARATOR).$filename;
     }
-    
-    
+
+
     /**
-     * 
+     * @param $key
+     * @param mixed $value
      */
-    static public function setGlobal($key, $value = NULL)
+    static public function setGlobal($key, $value)
     {
         if (is_array($key))
         {
@@ -175,16 +213,15 @@ class View
             View::$_global_data[$key] = $value;
         }
         
-        return $this;
     }
-    
+
     /**
-     * 
+     * @param $key
+     * @param $value
+     * @return $this
      */
     static public function bindGlobal($key, & $value)
     {
         View::$_global_data[$key] =& $value;
-        
-        return $this;
     }
 }
