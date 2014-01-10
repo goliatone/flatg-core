@@ -206,6 +206,22 @@ class FlatG {
     }
 
     /**
+     *
+     * @param callable $method Method that will handle all
+     *                         404 pages.
+     *
+     *
+     * @param callable $method Callable to handle route.
+     * @param string   $name   Route name. Default 404.
+     * @param string   $route  Route url. Default '/404'.
+     */
+    static public function register404Handler($method, $name='404', $route="/404")
+    {
+        self::$router->map($route, $method, array('name'=> $name));
+        self::$router->setDefaultRouteName($name);
+    }
+
+    /**
      * @param $routeUrl
      * @param string $target
      * @param array $args
@@ -221,6 +237,7 @@ class FlatG {
     static public $_metadata = array();
 
     /**
+     * TODO: Make configuration parsers. Make initializer.
      * @param null $name
      * @param null $content
      * @return null|string
@@ -259,48 +276,39 @@ class FlatG {
         
         $route = self::$router->handleRequest();
 
-        if($route)
+
+        /*
+         * If we don't have a route and we did not
+         * register a 404 handler, we use default.
+         * This will exit();
+         */
+        if(!$route) self::render404();
+
+        $callback   = $route->getTarget();
+        $routeName  = $route->getName();
+        $arguments  = $route->getAugmentedParams();
+
+        ////// TODO: Implement real event flow
+        $e = new Event($routeName, $arguments);
+        $e->dispatch();
+
+
+        //////////////////////////////////////
+        // TODO: We should register all handlers as
+        //       event listeners to the route name (or url?)
+        //       and just dispatch it here.
+        if(is_callable($callback))
         {
-            ////// TODO: Implement real event flow
-            $event_name = $route->getName();
-            $event_args = $route->getAugmentedParams();
-            $e = new Event($event_name, $event_args);
-            $e->dispatch();
-            //////////////////////////////////////
-            
-            $callback = $route->getTarget();
-            
-            if(is_callable($callback))
-            {
-                if(is_array($callback)) call_user_func($callback, $route->getAugmentedParams());
-                else $callback($route->getAugmentedParams());
-                
-            } 
-            else if(is_array($callback))
-            {
-                $_Controller = $callback[0];
-                call_user_func($_Controller::$callback[1], $route->getAugmentedParams());
-            } else throw new ErrorException('Internal Router Error 500 '.print_r($callback), 500);
-        } 
-        else 
-        {
-            //If we have a route to handle 404s, fire it!
-            if(self::$router->hasRoute('404'))
-            {
-                //TODO: Send params as well!!!
-                $route = self::$router->getRoute('404');
-                $callback = $route->getTarget();
-                if($callback && is_callable($callback)) call_user_func($callback);
-                else self::render404();
-            }
-            //else, we assume our theme has a 404 view, and try that.
-            else 
-            {
-                self::render404();
-            }
-            
-            //else, we just show an error message.
+            call_user_func($callback, $arguments);
         }
+        else if(is_array($callback))
+        {
+            //This should be a helper. Also, we should be creating
+            //an instance, since this would only work on static methods.
+            $_Controller = $callback[0];
+            call_user_func($_Controller::$callback[1], $arguments);
+            
+        } else throw new ErrorException('Internal Router Error 500 '.print_r($callback), 500);
     }
 
     /**
