@@ -24,18 +24,6 @@ use goliatone\flatg\Route;
 class Router {
 
     /**
-    * Array that holds all Route objects
-    * @var array
-    */ 
-    private $_routes;
-    
-    /**
-    * Array that holds all preprocessors Routes
-    * @var array
-    */ 
-    private $_preprocessors;
-
-    /**
      * Array to store named routes in, used for reverse routing.
      * @var array 
      */
@@ -44,12 +32,41 @@ class Router {
     /**
      * The base REQUEST_URI. Gets prepended to all route url's.
      * TODO:RENAME TO BASE_URL
+     *
      * @var string
      */
     public $basePath = '';
-    
+
+    /**
+     * Current request URL
+     * @var string
+     */
     public $requestUrl;
-    
+
+    /**
+     * Array that holds all Route objects
+     * @var array
+     * @access protected
+     */
+    protected $_routes;
+
+    /**
+     * Array that holds all preprocessors Routes
+     * @var array
+     * @access protected
+     */
+    protected $_preprocessors;
+
+
+    /**
+     * @var string
+     * @access protected
+     */
+    protected $_defaultRouteName = '404';
+
+    /**
+     * Router constructor.
+     */
     public function __construct()
     {
         $this->reset();    
@@ -66,15 +83,7 @@ class Router {
         $this->_preprocessors = array();
     }
     
-    /**
-     * Set the base url - gets prepended to all route url's.
-     * TODO:RENAME TO setBaseUrl
-     * @param string $base_url 
-     */
-    public function setBasePath($basePath) 
-    {
-        $this->basePath = rtrim($basePath, "/");
-    }
+
 
     /**
     * Route factory method
@@ -139,9 +148,180 @@ class Router {
         
         return $this;
     }
-    
+
     /**
-     * 
+     * Match given request url and request method and see if a route has been defined for it
+     * If so, return route's target
+     * If called multiple times
+     */
+    public function match($requestUrl, $requestMethod = 'GET') {
+
+        foreach($this->_routes as $route)
+        {
+            if(!($matches = $this->checkRoute($route, $requestUrl, $requestMethod))) continue;
+
+            return $this->setRouteParams($route, $matches);
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Check if a route's URL can handle current request.
+     */
+    public function checkRoute($route, $requestUrl, $requestMethod = 'GET')
+    {
+        // compare server request method with route's allowed http methods
+        if(!in_array($requestMethod, $route->getMethods())) return FALSE;
+
+        // check if request url matches route regex. if not, return false.
+        if (!preg_match("~^".$route->getRegex()."*$~i", $requestUrl, $matches)) return FALSE;
+
+        return $matches;
+    }
+
+    /**
+     * Reverse route a named route
+     *
+     * @param $routeName The name of the route to reverse route.
+     * @param array $params Optional array of parameters to use in URL
+     * @param bool $absolute
+     * @return mixed|string The url to the route
+     * @throws \Exception
+     */
+    public function generate($routeName, array $params = array(), $absolute = FALSE) {
+
+        // Check if route exists
+        //TODO: Do we really want to kill the app here?!
+        if(!$this->hasRoute($routeName))
+            throw new Exception("No route '{$routeName}' has been found.");
+
+        $route = $this->namedRoutes[$routeName];
+        $url = $route->getUrl();
+
+        $url = str_replace(array('(', ')'), array('', ''), $url);
+
+        //WE NEED TO MERGE DEFAULT PARAMS WITH GIVEN PARAMS.
+        $params = array_merge($route->getParameters(), $params);
+        $params = array_map('trim', $params);
+
+        // replace route url with given parameters
+        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
+            // grab array with matches
+            $param_keys = $param_keys[1];
+
+            // loop trough parameter names, store matching value in $params array
+            foreach ($param_keys as $i => $key)
+            {
+                if(!isset($params[$key])) continue;
+
+                $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
+            }
+        }
+
+        //we should make sure we dont have any :w left, if we do
+        //everything after that is kk.
+        //TODO: Make this for realz!
+        if (strpos($url,':') !== FALSE)
+            $url = strstr($url, ':', TRUE);
+
+        //If we want to go to root, allow.
+        if($url !== '/')
+            GHelper::removeTrailingSlash($url);
+
+        if($absolute)
+            $url = $this->getBaseUrl($url);
+
+        return $url;
+    }
+
+    /**
+     * HTTP Status Code:
+     * 301 Moved Permanently
+     * 302 Moved Temporarily
+     * 303 See Other
+     */
+    public function redirect($url, $statusCode = 303)
+    {
+        if (strpos($url, '://') === FALSE)
+        {
+            // Make the URI into a URL
+            $url = $this->getBaseURL($url);
+        }
+
+        header('Location: ' . $url, TRUE, $statusCode);
+        exit( );
+    }
+    
+
+
+
+
+    /**
+     * Matches the current request against mapped routes
+     * TODO: MOVE
+     */
+    public function handleRequest() {
+
+        $request       = $this->_generateRequest();
+        $requestUrl    = $request['url'];
+        $requestMethod = $request['method'];
+
+        $this->requestUrl = $requestMethod;
+
+        $route = $this->match($requestUrl, $requestMethod);
+        $route || $route = $this->getDefaultRoute();
+
+        return $route;
+    }
+
+    /**
+     * @return array
+     * @access protected
+     */
+    protected function _generateRequest()
+    {
+        //TODO: Move to Request class, we send a request param here.
+        /*$_PUT = array();
+        if( $_SERVER['REQUEST_METHOD'] == 'PUT' )
+        {
+           parse_str(file_get_contents('php://input'), $_PUT);
+        }
+        $_DELETE = array();
+        if( $_SERVER['REQUEST_METHOD'] == 'DELETE' )
+        {
+           parse_str(file_get_contents('php://input'), $_DELETE);
+        }*/
+        //Dirty hack to support PUT/DELETE
+        $requestMethod = (isset($_POST['_method']) &&
+            ($_method = strtoupper($_POST['_method'])) &&
+            in_array($_method, array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
+
+        // $requestUrl    = $_SERVER['REQUEST_URI']; $_SERVER['PATH_INFO'];
+        $requestUrl    = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/';
+
+        // strip GET variables from URL
+        if(($pos = strpos($requestUrl, '?')) !== FALSE)
+        {
+            $requestUrl =  substr($requestUrl, 0, $pos);
+        }
+        /*
+        if(($pos = strpos($requestUrl, 'http')) === FALSE)
+        {
+            $requestUrl = "http://".$_SERVER['SERVER_NAME'].$requestUrl;
+        }
+        */
+
+        //Get rid of the trailing slash.
+        if($requestUrl !== '/')
+            $requestUrl = GHelper::removeTrailingSlash($requestUrl);
+
+        return array('url'=>$requestUrl, 'method'=>$requestMethod);
+    }
+
+
+    /**
+     * TODO: Implement!!!!
      */
     public function addPreprocess($routeUrl, $target = '', array $args = array())
     {
@@ -152,93 +332,18 @@ class Router {
 
         if(isset($args['methods']))
             $route->setMethods($args['methods']);
-        
+
         if(isset($args['filters']))
             $route->setFilters($args['filters']);
-            
+
         if(isset($args['params']))
             $route->setParameters($args['params']);
-        
+
         $this->_preprocessors[] = $route;
-        
+
         return $this;
     }
 
-    /**
-    * Matches the current request against mapped routes
-    */
-    public function handleRequest() {
-        //TODO: Move to Request class, we send a request param here.
-        /*$_PUT = array();
-        if( $_SERVER['REQUEST_METHOD'] == 'PUT' ) 
-        { 
-           parse_str(file_get_contents('php://input'), $_PUT);
-        }
-        $_DELETE = array();
-        if( $_SERVER['REQUEST_METHOD'] == 'DELETE' ) 
-        { 
-           parse_str(file_get_contents('php://input'), $_DELETE);
-        }*/
-        //Dirty hack to support PUT/DELETE
-        $requestMethod = (isset($_POST['_method']) &&
-                         ($_method = strtoupper($_POST['_method'])) &&
-                         in_array($_method, array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
-        
-        // $requestUrl    = $_SERVER['REQUEST_URI']; $_SERVER['PATH_INFO'];
-        $requestUrl    = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : '/';
-        
-        // strip GET variables from URL
-        if(($pos = strpos($requestUrl, '?')) !== FALSE) 
-        {
-            $requestUrl =  substr($requestUrl, 0, $pos);
-        }
-        /*
-        if(($pos = strpos($requestUrl, 'http')) === FALSE)
-        {
-            $requestUrl = "http://".$_SERVER['SERVER_NAME'].$requestUrl;
-        }
-        */
-        
-        //Get rid of the trailing slash.
-        if($requestUrl !== '/')
-            $requestUrl = GHelper::removeTrailingSlash($requestUrl);
-        
-        $this->requestUrl = $requestUrl;
-        
-        return $this->match($requestUrl, $requestMethod);
-    }
-
-    /**
-    * Match given request url and request method and see if a route has been defined for it
-    * If so, return route's target
-    * If called multiple times
-    */
-    public function match($requestUrl, $requestMethod = 'GET') {
-        
-        foreach($this->_routes as $route) 
-        {
-            if(!($matches = $this->checkRoute($route, $requestUrl, $requestMethod))) continue;
-            
-            return $this->setRouteParams($route, $matches);
-        }
-
-        return FALSE;
-    }
-    
-    /**
-     * Check if a route's URL can handle current request.
-     */
-    public function checkRoute($route, $requestUrl, $requestMethod = 'GET')
-    {
-         // compare server request method with route's allowed http methods
-        if(!in_array($requestMethod, $route->getMethods())) return FALSE;
-        
-        // check if request url matches route regex. if not, return false.
-        if (!preg_match("~^".$route->getRegex()."*$~i", $requestUrl, $matches)) return FALSE;
-        
-        return $matches;
-    }
-    
     /**
      * Extract params from current request and set route's
      *
@@ -272,58 +377,13 @@ class Router {
     }
 
     /**
-     * Reverse route a named route
-     *
-     * @param $routeName The name of the route to reverse route.
-     * @param array $params Optional array of parameters to use in URL
-     * @param bool $absolute
-     * @return mixed|string The url to the route
-     * @throws \Exception
+     * Set the base url - gets prepended to all route url's.
+     * TODO:RENAME TO setBaseUrl
+     * @param string $base_url
      */
-    public function generate($routeName, array $params = array(), $absolute = FALSE) {
-        
-        // Check if route exists
-        //TODO: Do we really want to kill the app here?!
-        if(!$this->hasRoute($routeName))
-            throw new Exception("No route '{$routeName}' has been found.");
-        
-        $route = $this->namedRoutes[$routeName];
-        $url = $route->getUrl();
-        
-        $url = str_replace(array('(', ')'), array('', ''), $url);
-        
-        //WE NEED TO MERGE DEFAULT PARAMS WITH GIVEN PARAMS.
-        $params = array_merge($route->getParameters(), $params);
-        $params = array_map('trim', $params);
-        
-        // replace route url with given parameters
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
-            // grab array with matches
-            $param_keys = $param_keys[1];
-
-            // loop trough parameter names, store matching value in $params array
-            foreach ($param_keys as $i => $key) 
-            {
-                if(!isset($params[$key])) continue;
-                
-                $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
-            }
-        }
-        
-        //we should make sure we dont have any :w left, if we do
-        //everything after that is kk.
-        //TODO: Make this for realz!
-        if (strpos($url,':') !== FALSE)
-            $url = strstr($url, ':', TRUE);
-        
-        //If we want to go to root, allow.
-        if($url !== '/')
-            GHelper::removeTrailingSlash($url);
-        
-        if($absolute)
-            $url = $this->getBaseUrl($url);
-        
-        return $url; 
+    public function setBasePath($basePath)
+    {
+        $this->basePath = rtrim($basePath, "/");
     }
 
     /**
@@ -357,24 +417,32 @@ class Router {
      */
     public function getRoute($routeName)
     {
+        if(!$this->hasRoute($routeName)) return NULL;
+
         return $this->namedRoutes[$routeName];
     }
-    
+
     /**
-     * HTTP Status Code:
-     * 301 Moved Permanently
-     * 302 Moved Temporarily
-     * 303 See Other
+     * @return Route
      */
-    public function redirect($url, $statusCode = 303)
+    public function getDefaultRoute()
     {
-        if (strpos($url, '://') === FALSE)
-        {
-            // Make the URI into a URL
-            $url = $this->getBaseURL($url);
-        }
-       
-       header('Location: ' . $url, TRUE, $statusCode);
-       exit( );
+        return $this->getRoute($this->getDefaultRouteName());
+    }
+
+    /**
+     * @param string $route
+     */
+    public function setDefaultRouteName($route)
+    {
+        $this->_defaultRouteName = $route;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultRouteName()
+    {
+        return $this->_defaultRouteName;
     }
 }
