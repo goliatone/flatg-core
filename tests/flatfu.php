@@ -43,6 +43,7 @@ fu::test("view theme path",function(){
 /////////////////////////////////////////////
 // HTML HELPER METHODS
 /////////////////////////////////////////////
+
 fu::test("GHtml helper serializes arrays into attr strings",function(){
     $attrs = GHtml::attr('dddd');    
     $expected = "";
@@ -86,6 +87,7 @@ fu::test("GHtml truncates html respecting tags and words",function(){
     $expected = "<p>Lorem <b>ipsum</b></p>";
     fu::equal($truncated, $expected, "Truncated text respects word boundary and nested tags");
 });
+
 /////////////////////////////////////////////
 // HELPER METHODS
 /////////////////////////////////////////////
@@ -139,11 +141,26 @@ fu::test("Route::arrayToObject",function(){
 // ROUTER
 /////////////////////////////////////////////
 fu::test("Router: we can add routes", function(){
-   FlatG::map('/404', function(){}, array('name'=>'404'));
-   $result = FlatG::$router->hasRoute('404');
+   FlatG::map('/route', function(){}, array('name'=>'route'));
+   $result = FlatG::$router->hasRoute('route');
 
-   fu::ok($result, 'We have a 404 route'); 
+   fu::ok($result, 'We have a route');
 });
+
+fu::test("Router: we have a default route name", function(){
+    $expected = '404';
+    $result = FlatG::$router->getDefaultRouteName();
+    fu::equal($result, $expected, 'Default route name is: '.$expected);
+});
+
+fu::test("Router: we have a default route name", function(){
+    FlatG::map('/404', function(){}, array('name'=>'404'));
+    $expected = '404';
+    $result = FlatG::$router->getDefaultRoute()->getName();
+
+    fu::equal($result, $expected, "We have a $expected route");
+});
+
 /////////////////////////////////////////////
 // App
 /////////////////////////////////////////////
@@ -178,6 +195,36 @@ fu::test("FlatG::map shows desired route /notes",function(){
     
     fu::equal($result, $expected);
 });
+
+fu::test("FlatG::map if route not found triggers provided 404 route handler",function(){
+
+    $endponit = "generate-404";
+    $_SERVER['PATH_INFO']      =
+    $_SERVER['REQUEST_URI']    =
+    $_SERVER['REDIRECT_URL']   = "/$endponit";
+    $_SERVER['REQUEST_METHOD'] ='GET';
+    $_SERVER['QUERY_STRING']   = '';
+
+    $_SERVER['SCRIPT_NAME']     = '/index.php';
+    $_SERVER['PHP_SELF']        = $_SERVER['SCRIPT_NAME'].'/'.$endponit;
+    $_SERVER['PATH_TRANSLATED'] = 'redirect:'.$_SERVER['PHP_SELF'];
+
+    $result = "empty";
+    $expected = "__handled__";
+    $handler = function() use (&$result){
+        $result = "__handled__";
+    };
+    FlatG::map('/404',
+        $handler,
+        array('methods' => 'GET', 'name'=>'404')
+    );
+    $config = fu::fixture('config');
+    FlatG::initialize($config);
+    FlatG::run();
+
+    fu::equal($result, $expected);
+});
+
 
 fu::test("FlatG::map if route not found triggers provided 404 route handler",function(){
 
