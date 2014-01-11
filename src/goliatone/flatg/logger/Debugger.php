@@ -60,7 +60,7 @@ class Debugger
                 $trace['args'] = array(self::cleanPath($trace['args'][0]));
             }*/
 
-            self::_getArguments($trace);
+            $trace['args'] = self::_getArguments($trace);
 
             if(isset($trace['class']))
                 $trace['call'] = $trace['class'].$trace['type'].$function;
@@ -137,9 +137,10 @@ class Debugger
         return $path;
     }
 
-    static protected function _getArguments(& $trace)
+    static protected function _getArguments($trace)
     {
-        extract($trace, EXTR_SKIP);
+        # Extract $args, $function, $class, $type from $trace.
+        extract($trace);
 
         if(!isset($args)) return;
 
@@ -150,14 +151,12 @@ class Debugger
             try {
                 if(isset($class))
                 {
-                    switch(!method_exists($class, $function))
+                    if(!method_exists($class, $function))
                     {
-                        case isset($type) && $type === '::':
-                            $function = '__callStatic';
-                            break;
-                        default:
-                            $function = '__call';
-                            break;
+                        # Missing method? Assume magic.
+                        $function = '__call';
+                        # If type is static, make __callStatic
+                        (isset($type) && $type === '::') && $function .= 'Static';
                     }
 
                     $reflection = new ReflectionMethod($class, $function);
@@ -169,18 +168,18 @@ class Debugger
                 $params = $reflection->getParameters();
 
             } catch (Exception $e) {
-                #this might go on silently...
+                # this might go on silently...
             }
         }
 
         $arguments = array();
 
-        foreach($trace['args'] as $i => $arg)
+        foreach($args as $i => $arg)
         {
             $key = isset($params[$i]) ? $params[$i]->name : $i;
             $arguments[$key] = $arg;
         }
-
-        $trace['args'] = $arguments;
+        
+        return $arguments;
     }
 }
