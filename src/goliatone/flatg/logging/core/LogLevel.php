@@ -8,6 +8,10 @@
  */
 final class LogLevel
 {
+
+///////////////////////////////////////////////////
+// LogLevel NUMERICAL CODES
+///////////////////////////////////////////////////
     /**
      *
      */
@@ -88,6 +92,9 @@ final class LogLevel
         self::ALL       => 'ALL',
     );
 
+///////////////////////////////////////////////////
+// LogLevel DEFINITIONS.
+///////////////////////////////////////////////////
     static public $OFF;
     static public $DEBUG;
     static public $INFO;
@@ -99,31 +106,42 @@ final class LogLevel
     static public $EMERGENCY;
     static public $ALL;
 
+
+    static public $CODES_TO_LEVEL  = array();
+    static public $LABELS_TO_LEVEL = array();
+
     /**
-     * Gets the name of the logging level.
-     *
-     * @param  int $level
-     * @throws \InvalidArgumentException
+     * @param $level
      * @return string
+     * @throws \InvalidArgumentException
      */
-    public static function getLevelName($level)
+    static public function getLevel($level)
     {
-        if (!isset(static::$levels[$level])) {
-            throw new \InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+        if(is_a($level, 'goliatone\\flatg\\logging\\core\\LogLevel')) return $level;
+
+        if(is_int($level))
+        {
+            if (!isset(static::$CODES_TO_LEVEL[$level]))
+            {
+                throw new \InvalidArgumentException('Level '.$level.' is not defined, use one of: '.implode(', ', array_values(static::$levels)));
+            }
+
+            return static::$CODES_TO_LEVEL[$level];
         }
 
-        return static::$levels[$level];
-    }
+        if(is_string($level))
+        {
+            $level = strtoupper($level);
 
-    /**
-     * Gets all supported logging levels.
-     *
-     * @return array Assoc array with human-readable
-     *               level names => level codes.
-     */
-    public static function getLevels()
-    {
-        return array_flip(static::$levels);
+            if (!isset(static::$LABELS_TO_LEVEL[$level]))
+            {
+                throw new \InvalidArgumentException('Level '.$level.' is not defined, use one of: '.implode(', ', array_values(static::$LABELS_TO_LEVEL)));
+            }
+
+            return static::$LABELS_TO_LEVEL[$level];
+        }
+
+        throw new \InvalidArgumentException('Level '.$level.' is not defined, use one of: '.implode(', ', array_values(static::$LABELS_TO_LEVEL)));
     }
 
 
@@ -144,8 +162,20 @@ final class LogLevel
      */
     public function __construct($label, $code)
     {
-        $this->_label = $label;
-        $this->_code = $code;
+        $this->_code  = $code;
+        $this->_label = strtoupper($label);
+
+        //Register level for easy look up:
+        self::$CODES_TO_LEVEL[$code]   = $this;
+        self::$LABELS_TO_LEVEL[$label] = $this;
+    }
+
+    public function filters($level, $strict = FALSE)
+    {
+        $level = self::getLevel($level);
+
+        if($strict) return $this->getCode() !== $level->getCode();
+        else return !($level->getCode() > $this->getCode());
     }
 
     /**
@@ -179,13 +209,4 @@ if(!LogLevel::$ALL)
     }
 }
 
-//LogLevel::$OFF       = new LogLevel("OFF", LogLevel::OFF);
-//LogLevel::$DEBUG     = new LogLevel("DEBUG", LogLevel::DEBUG);
-//LogLevel::$INFO      = new LogLevel("INFO", LogLevel::INFO);
-//LogLevel::$NOTICE    = new LogLevel("NOTICE", LogLevel::NOTICE);
-//LogLevel::$WARNING   = new LogLevel("WARNING", LogLevel::WARNING);
-//LogLevel::$ERROR     = new LogLevel("ERROR", LogLevel::ERROR);
-//LogLevel::$CRITICAL  = new LogLevel("CRITICAL", LogLevel::CRITICAL);
-//LogLevel::$ALERT     = new LogLevel("ALERT", LogLevel::ALERT);
-//LogLevel::$EMERGENCY = new LogLevel("EMERGENCY", LogLevel::EMERGENCY);
-//LogLevel::$ALL       = new LogLevel("ALL", LogLevel::ALL);
+
