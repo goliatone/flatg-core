@@ -1,19 +1,44 @@
-<?php namespace goliatone\events\core {
+<?php namespace goliatone\flatg\logging\core {
 
 
     use goliatone\flatg\logging\core\LogMessage;
 
+    /**
+     * Interface ILogPublisher
+     * @package goliatone\flatg\logging\core
+     */
     interface ILogPublisher
     {
 
-        public function getName();
-
+        /**
+         * @param  LogMessage $message
+         * @return void
+         */
         public function publish(LogMessage $message);
 
-        public function addFormatter(ILogMessageFormatter $formatter);
+        /**
+         * @param  LogMessage $message
+         * @return mixed
+         */
+        public function flush(LogMessage $message);
+
+        /**
+         * @param  string               $id
+         * @param  ILogMessageFormatter $formatter
+         * @return ILogPublisher
+         */
+        public function addFormatter($id, ILogMessageFormatter $formatter);
 
 
+        /**
+         * @return void
+         */
         public function terminate();
+
+        /**
+         * @return string
+         */
+        public function getName();
 
     }
 }
