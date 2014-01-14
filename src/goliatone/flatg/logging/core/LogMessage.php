@@ -1,12 +1,15 @@
 <?php namespace goliatone\flatg\logging\core {
 
+    use ArrayIterator;
+    use \ArrayObject;
     use goliatone\flatg\logging\core\LogLevel;
 
     /**
+     * TODO: Make it extend ArrayObject
      * Class LogMessage
      * @package goliatone\events\core
      */
-    class LogMessage
+    class LogMessage extends ArrayObject
     {
         /**
          * @var LogLevel
@@ -47,9 +50,16 @@
         protected $_context = array();
 
 
+        /**
+         * @var null
+         */
         protected $_address = null;
 
 
+        /**
+         * @var array
+         */
+//        protected $_extra = array();
 
         /**
          * @param $level
@@ -58,9 +68,23 @@
          */
         function __construct($level, $message, array $context = array())
         {
-            $this->_level      = $level;
+            //TODO: We should integrate extras/content with __call and
+            // use @method for set{$property} if property_exists($this, '_'.$property)
+            // make sure we keep both setters and offsetSet in sync.
             $this->_context    = $context;
-            $this->_rawMessage = $message;
+            $this->_message    = $message;
+
+            parent::__construct($this->_context,
+                \ArrayObject::STD_PROP_LIST |
+                \ArrayObject::ARRAY_AS_PROPS);
+
+            //TODO: Remove this!!! we should not have this cruft.
+            $this->setLevel($level);
+            $this->setMessage($message);
+            $this->offsetSet('rawMessage', $message);
+            $this->getAddress();
+            //This should not be here!
+            $this->setTimestamp(time());
         }
 
 
@@ -70,6 +94,7 @@
         public function setLevel(LogLevel $level)
         {
             $this->_level = $level;
+            $this->offsetSet('level', $level);
         }
 
         /**
@@ -101,8 +126,8 @@
          */
         public function setMessage($message)
         {
-            $this->_rawMessage = $message;
-            $this->_updateMessage();
+            $this->_message = $message;
+            $this->offsetSet('message', $message);
         }
 
         /**
@@ -113,12 +138,18 @@
             return $this->_message;
         }
 
+        public function getRawMessage()
+        {
+            return $this->_rawMessage;
+        }
+
         /**
          * @param mixed $stackTrace
          */
         public function setStackTrace($stackTrace)
         {
             $this->_stackTrace = $stackTrace;
+            $this->offsetSet('stackTrace', $stackTrace);
         }
 
         /**
@@ -130,15 +161,16 @@
         }
 
         /**
-         * @param int $timestamp
+         * @param mixed $timestamp
          */
         public function setTimestamp($timestamp)
         {
             $this->_timestamp = $timestamp;
+            $this->offsetSet('timestamp', $timestamp);
         }
 
         /**
-         * @return int
+         * @return mixed
          */
         public function getTimestamp()
         {
@@ -159,7 +191,7 @@
          */
         public function getContext()
         {
-            return $this->_context;
+            return $this->getArrayCopy();
         }
 
         /**
@@ -168,6 +200,7 @@
         public function setAddress($machine)
         {
             $this->_address = $machine;
+            $this->offsetSet('address', $machine);
         }
 
         /**
@@ -178,30 +211,11 @@
         {
             if(!$this->_address)
             {
-               $this->_address = (isset ($_SERVER['SERVER_ADDR'])) ? $_SERVER['SERVER_ADDR'] : 'localhost';
+                $address = (isset ($_SERVER['SERVER_ADDR'])) ? $_SERVER['SERVER_ADDR'] : 'localhost';
+                $this->setAddress($address);
             }
 
             return $this->_address;
-        }
-
-        protected function _updateMessage()
-        {
-            $this->_message = $this->_interpolate($this->_rawMessage, $this->_context);
-        }
-
-        /**
-         * Interpolate log message
-         * @param  mixed     $message               The log message
-         * @param  array     $context               An array of placeholder values
-         * @return string    The processed string
-         */
-        protected function _interpolate($message, $context = array())
-        {
-            $replace = array();
-            foreach ($context as $key => $value) {
-                $replace['{' . $key . '}'] = $value;
-            }
-            return strtr($message, $replace);
         }
 
     }
