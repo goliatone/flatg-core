@@ -20,6 +20,7 @@
 
         function __construct()
         {
+            $this->_formatter = new CompoundFormatter();
             $this->_defaultFormatterClass = 'goliatone\flatg\logging\formatters\SimpleFormatter';
         }
 

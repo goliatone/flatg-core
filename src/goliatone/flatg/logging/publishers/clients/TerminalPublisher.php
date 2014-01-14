@@ -2,6 +2,7 @@
 
     use goliatone\flatg\logging\core\LogMessage;
 
+
     class TerminalPublisher extends AbstractPublisher
     {
         /**
@@ -9,6 +10,7 @@
          */
         public function publish(LogMessage $message)
         {
+            $this->applyFormat($message);
             echo $message->getMessage();
         }
 
