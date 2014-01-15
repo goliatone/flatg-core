@@ -3,19 +3,33 @@
     use ArrayIterator;
     use \ArrayObject;
     use goliatone\flatg\logging\core\LogLevel;
+    use goliatone\flatg\logging\Debugger;
+    use goliatone\flatg\logging\helpers\Utils;
 
     /**
      * TODO: Make it extend ArrayObject
+     *
      * Class LogMessage
+     *
+     * @method setLevel() setLevel(LogLevel $level)
+     * @method string getLevel()
+     * @method setLogger() setLogger(string $logger)
+     * @method string getLogger()
+     * @method setMessage() setMessage(string $message)
+     * @method string getMessage()
+     * @method string getRawMessage()
+     * @method setStackTrace() setStackTrace(StackTrace $stackTrace)
+     * @method string getStackTrace()
+     * @method string setTimestamp() setTimestamp(DateTime $timestamp)
+     * @method string getTimestamp()
+     * @method setAddress() setAddress(string $machine)
+     * @method string getAddress()
+     *
      * @package goliatone\events\core
      */
     class LogMessage extends ArrayObject
     {
-        /**
-         * @var LogLevel
-         *
-         */
-        protected $_level;
+
 
         /**
          * @var string
@@ -23,26 +37,7 @@
         protected $_rawMessage = '';
 
 
-        /**
-         * @var string
-         */
-        protected $_message = '';
-
-        /**
-         *
-         */
-        protected $_stackTrace;
-
-        /**
-         * @var string
-         */
-        protected $_logger = '';
-
-        /**
-         * @var int
-         */
-        protected $_timestamp;
-
+        public $consumeUnusedTokens = FALSE;
 
         /**
          * @var array
@@ -50,140 +45,74 @@
         protected $_context = array();
 
 
-        /**
-         * @var null
-         */
-        protected $_address = null;
-
-
-        /**
-         * @var array
-         */
-//        protected $_extra = array();
-
-        /**
-         * @param $level
-         * @param $message
-         * @param array $context
-         */
-        function __construct($level, $message, array $context = array())
+        static public function factory($level, $message, array $context = array(), $name, $stackTraceSkip=3)
         {
-            //TODO: We should integrate extras/content with __call and
-            // use @method for set{$property} if property_exists($this, '_'.$property)
-            // make sure we keep both setters and offsetSet in sync.
-            $this->_context    = $context;
-            $this->_message    = $message;
+            $log = new LogMessage($level, $message, $context);
+            $log->setLogger($name);
 
-            parent::__construct($this->_context,
-                \ArrayObject::STD_PROP_LIST |
-                \ArrayObject::ARRAY_AS_PROPS);
+            $stackTrace = Debugger::backtrace($stackTraceSkip);
+            $log->setStackTrace($stackTrace);
 
-            //TODO: Remove this!!! we should not have this cruft.
-            $this->setLevel($level);
-            $this->setMessage($message);
-            $this->offsetSet('rawMessage', $message);
-            $this->getAddress();
-            //This should not be here!
-            $this->setTimestamp(time());
+            $address = Utils::getServerAddress( );
+            $log->setAddress($address);
+
+            return $log;
         }
-
 
         /**
          * @param LogLevel $level
+         * @param string   $message
+         * @param array    $context
          */
-        public function setLevel(LogLevel $level)
+        function __construct($level, $message, array $context = array())
         {
-            $this->_level = $level;
-            $this->offsetSet('level', $level);
+
+            //TODO: We should integrate extras/content with __call and
+            // use @method for set{$property} if property_exists($this, '_'.$property)
+            // make sure we keep both setters and offsetSet in sync.
+
+            $this->_context    = $context;
+            $this->_rawMessage = $message;
+
+            parent::__construct($this->_context,
+                                \ArrayObject::STD_PROP_LIST |
+                                \ArrayObject::ARRAY_AS_PROPS
+                               );
+
+            $this->setLevel($level);
+            $this->setMessage($message);
         }
 
-        /**
-         * @return LogLevel
-         */
-        public function getLevel()
+        function __call($name, $arguments)
         {
-            return $this->_level;
-        }
+            if(preg_match("/^(set|get)/i", $name))
+            {
+                $prefix = substr($name, 0, 3);
+                $key    = strtolower(substr($name, 3));
+                switch($prefix)
+                {
+                    case 'set':
+                        $value = $arguments[0];
+                        $this->offsetSet($key, $value);
+                        break;
+                    case 'get':
+                        //Access prop stored
+                        if($this->offsetExists($key))
+                            return $this->offsetGet($key);
+                        //We passed a default value on get{$name}($default)
+                        if(count($arguments) > 0)
+                            return $arguments[1];
 
-        /**
-         * @param string $logger
-         */
-        public function setLogger($logger)
-        {
-            $this->_logger = $logger;
-        }
+//                        return NULL;
 
-        /**
-         * @return string
-         */
-        public function getLogger()
-        {
-            return $this->_logger;
-        }
+//                        break;
+                    default:
+                        print('Upsy! The method is not defined, so I don\'t know what to do!');
 
-        /**
-         * @param string $message
-         */
-        public function setMessage($message)
-        {
-            $this->_message = $message;
-            $this->offsetSet('message', $message);
-        }
+                }
 
-        /**
-         * @return string
-         */
-        public function getMessage()
-        {
-            return $this->_message;
-        }
+            }
 
-        public function getRawMessage()
-        {
-            return $this->_rawMessage;
-        }
-
-        /**
-         * @param mixed $stackTrace
-         */
-        public function setStackTrace($stackTrace)
-        {
-            $this->_stackTrace = $stackTrace;
-            $this->offsetSet('stackTrace', $stackTrace);
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getStackTrace()
-        {
-            return $this->_stackTrace;
-        }
-
-        /**
-         * @param mixed $timestamp
-         */
-        public function setTimestamp($timestamp)
-        {
-            $this->_timestamp = $timestamp;
-            $this->offsetSet('timestamp', $timestamp);
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getTimestamp()
-        {
-            return $this->_timestamp;
-        }
-
-        /**
-         * @param array $context
-         */
-        public function setContext($context)
-        {
-            $this->_context = $context;
-            $this->_updateMessage();
         }
 
         /**
@@ -191,32 +120,15 @@
          */
         public function getContext()
         {
+            //TODO: How expensive is this?
             return $this->getArrayCopy();
         }
 
-        /**
-         * @param string $machine
-         */
-        public function setAddress($machine)
+        public function updateMessage()
         {
-            $this->_address = $machine;
-            $this->offsetSet('address', $machine);
+            //TODO, should we implement stringTemplate here and remove dep on Utils?
+            $message = Utils::stringTemplate($this->getMessage(), $this->getContext(), $this->consumeUnusedTokens);
+            $this->setMessage($message);
         }
-
-        /**
-         * TODO: This should be static, one per Log!!
-         * @return string
-         */
-        public function getAddress()
-        {
-            if(!$this->_address)
-            {
-                $address = (isset ($_SERVER['SERVER_ADDR'])) ? $_SERVER['SERVER_ADDR'] : 'localhost';
-                $this->setAddress($address);
-            }
-
-            return $this->_address;
-        }
-
     }
 }

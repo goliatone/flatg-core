@@ -9,6 +9,11 @@
      * `ILogPublisher` are associated
      * with one or more `ILogFormatter`.
      *
+     * We should format by default:
+     * - Messages
+     * - Exceptions
+     * - DateTime
+     *
      * Interface ILogFormatter
      * @package goliatone\events\core
      */

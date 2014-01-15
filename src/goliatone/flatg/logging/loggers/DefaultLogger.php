@@ -108,7 +108,9 @@
         {
             $msg = new LogMessage($level, $message, $context);
             $msg->setLogger($this->getName());
-//            $msg->setTimestamp(new DateTime('NOW'));
+            $msg->setTimestamp(new DateTime('NOW'));
+//            $tmp = $msg['timestamp'];
+//            $msg['timestamp']=function($context, $match)use($tmp){return date(Utils::ISO8601).$tmp->format(Utils::ISO8601);};
 //            $msg->setStackTrace(Debugger::backtrace($stackTraceSkip));
 
             return $msg;

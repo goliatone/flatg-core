@@ -5,6 +5,7 @@
 
     /**
      * Class CompoundFormatter.
+     * TODO: Rename to CompositeFormatter.
      * TODO: Extend TypedCollection(?)
      *
      * @package goliatone\flatg\logging\formatters

@@ -47,9 +47,9 @@
             $this->register('unknown type', function(){ return "unknown type";});
 
 //            $this->register('array',    $this->wrapClass('goliatone\\flatg\\logging\\formatters\\transformers\\ArrayTransformer'));
-//            $this->register('object',   $this->wrapClass('goliatone\\flatg\\logging\\formatters\\transformers\\ObjectTransformer'));
+            $this->register('object',   $this->wrapClass('ObjectTransformer'));
 //            $this->register('resource', $this->wrapClass('goliatone\\flatg\\logging\\formatters\\transformers\\ResourceTransformer'));
-//            $this->register('DateTime', $this->wrapClass('goliatone\\flatg\\logging\\formatters\\transformers\\DateTimeTransformer'));
+            $this->register('DateTime', $this->wrapClass('goliatone\\flatg\\logging\\formatters\\transformers\\DateTimeTransformer'));
 
             $this->register('default', function($value){return print_r($value, TRUE);});
         }
@@ -57,9 +57,16 @@
         //TODO: Use __invoke on BaseTransformer...
         protected function wrapClass($Class)
         {
+
             return function($value, $provider) use($Class){
-                $handler = new $Class();
-                return $handler->transform($value, $provider);
+                echo "We are inside wrapClass! {$Class}".PHP_EOL;
+                try{
+                    $handler = new $Class();
+
+                    return $handler->transform($value, $provider);
+                } catch(\Exception $e) {
+                    return $e->getMessage();
+                }
             };
         }
 
@@ -75,6 +82,11 @@
             //We overwrite other handlers.
             $this->_handlers[$type] = $handler;
             return $this;
+        }
+
+        public function parseContext(array $context=array())
+        {
+            return array_map(array($this, 'transform'), $context);
         }
 
         /**

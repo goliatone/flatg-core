@@ -7,9 +7,10 @@
 
         public function transform($object, $provider)
         {
+
             $fullyQualifiedClassName = Utils::fullyQualifiedClassName($object);
             $handler = $provider->getHandler($fullyQualifiedClassName);
-            echo $fullyQualifiedClassName;
+            echo "OBJECT PARSER: ". $fullyQualifiedClassName."\n";
 
             return $handler->transform($fullyQualifiedClassName, $provider);
         }

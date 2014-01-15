@@ -2,10 +2,14 @@
 
     use goliatone\flatg\logging\core\ILogMessageFormatter;
     use goliatone\flatg\logging\core\LogMessage;
+    use goliatone\flatg\logging\formatters\transformers\TransformManager;
+    use goliatone\flatg\logging\helpers\Utils;
 
     class SimpleFormatter implements ILogMessageFormatter
     {
-        public $pattern = "[{timestamp}] {level} - {message}\n";
+        public $pattern = "[{timestamp}] {level}: {message}\n";
+
+        public $consumeUnusedTokens = true;
 
         /**
          * TODO: Maybe take in a string + array? Make it generic enough
@@ -19,35 +23,20 @@
          */
         public function format(LogMessage $message)
         {
-            //TODO: There should be a better way to handle this?
-            //seems a bit wasteful. But, we do have to set the message after interpolation
-            //so maybe we should keep the first round on LogMessage, do simple interpolation
-            //then here is another interpolation about the actual display:
-            //LogMessage: message = The class {class} could not be found. Use {alt} instead.
-            //Log entry: [{timestamp}] {logLevel}: {message}. {extras}.\n
-            $text = $this->_interpolate($message->getMessage(), $message->getContext());
+            $transformer = new TransformManager();
+            $context = $transformer->parseContext($message->getContext());
+
+            $message->consumeUnusedTokens = $this->consumeUnusedTokens;
+            $message->updateMessage();
+
+            $text = Utils::stringTemplate($this->pattern,
+                                          $context,
+                                          $this->consumeUnusedTokens
+                                         );
             $message->setMessage($text);
-
-            $text = $this->_interpolate($this->pattern, $message->getContext());
-
-            $message->setMessage($text);
-
             return $message;
         }
 
-        /**
-         * Interpolate log message
-         * @param  mixed     $message               The log message
-         * @param  array     $context               An array of placeholder values
-         * @return string    The processed string
-         */
-        protected function _interpolate($message, $context = array())
-        {
-            $replace = array();
-            foreach ($context as $key => $value) {
-                $replace['{' . $key . '}'] = $value;
-            }
-            return strtr($message, $replace);
-        }
+
     }
 }

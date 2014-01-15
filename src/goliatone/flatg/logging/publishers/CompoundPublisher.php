@@ -5,6 +5,7 @@
     use goliatone\flatg\logging\core\ILogMessageFormatter;
 
     /**
+     * TODO: Rename to CompositePublisher.
      * Class CompoundPublisher
      * @package goliatone\flatg\logging\publishers
      */
