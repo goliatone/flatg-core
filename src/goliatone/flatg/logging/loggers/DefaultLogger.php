@@ -26,6 +26,9 @@
          */
         protected $_publisher;
 
+        /**
+         * @var array
+         */
         protected $_augmenters = array();
 
         /**
@@ -41,6 +44,9 @@
         protected $_threshold;
 
 
+        /**
+         * @var
+         */
         protected $_fullyQualifiedClassName;
 
 
@@ -49,6 +55,9 @@
          */
         protected $_name    = '';
 
+        /**
+         * @var null
+         */
         protected $_owner   = NULL;
 
         /**
@@ -121,6 +130,9 @@
         }
 
 
+        /**
+         * @param $callable
+         */
         public function addAugmenter($callable)
         {
             $augmenter = $callable;
@@ -159,20 +171,36 @@
          */
         public function isFiltered(LogLevel $level)
         {
+            //Is logging disabled globally?
+            if(static::$DISABLED) return TRUE;
+
+            //Is this logger explicitly disabled?
             if($this->_enabled === FALSE) return TRUE;
 
-//            $this->
+            //Provided level is filtered by the threshold!
+            if($this->_threshold->filters($level)) return TRUE;
+
             //TODO: We should have filters, and based on which level
+//            if($this->filters->filters($level, $this)) return TRUE;
+
             // we have up or what package is disabled, etc.
             return FALSE;
         }
 
 
+        /**
+         * @param LogMessage $message
+         */
         public function publish(LogMessage $message)
         {
             $this->_publisher->publish($message);
         }
 
+        /**
+         * @param $id
+         * @param ILogPublisher $publisher
+         * @return $this
+         */
         public function addPublisher($id, ILogPublisher $publisher)
         {
             $this->_publisher->add($id, $publisher);
@@ -182,6 +210,11 @@
         //TODO: Should we have a setFormatterToPublisher($publisherId, $formatter)
         //or should publisher request formatter? Or should we move this method to
         //the ILogPublisher?
+        /**
+         * @param $publisherId
+         * @param ILogMessageFormatter $formatter
+         * @return $this
+         */
         public function addFormatter($publisherId, ILogMessageFormatter $formatter)
         {
             $this->_publisher->addFormatter($publisherId, $formatter);
@@ -241,6 +274,9 @@
             $this->_fullyQualifiedClassName = Utils::qualifiedClassName($owner);
         }
 
+        /**
+         * @return mixed
+         */
         public function getFullyQualifiedClassName()
         {
             return $this->_fullyQualifiedClassName;
