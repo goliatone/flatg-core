@@ -1,14 +1,16 @@
 <?php namespace goliatone\flatg\logging\formatters\transformers {
 
 
+    use goliatone\flatg\logging\core\ILogMessageFormatTransformer;
     use goliatone\flatg\logging\helpers\Utils;
 
-    class DateTimeTransformer extends BaseTransformer
+    class DateTimeTransformer extends BaseTransformer implements ILogMessageFormatTransformer
     {
-        public function transform($resource, $provider)
+        public $format = Utils::ISO8601;
+
+        public function transform($resource, $provider = NULL)
         {
-            $format = Utils::ISO8601;
-            return $resource->format($format);
+            return $resource->format($this->format);
         }
     }
 }
