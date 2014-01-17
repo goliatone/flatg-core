@@ -4,7 +4,7 @@
     class ArrayTransformer extends BaseTransformer
     {
 
-        public function transform($resource, $provider)
+        public function transform($resource, $provider = NULL)
         {
 
             $sizeOf = sizeof($resource);
