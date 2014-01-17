@@ -52,7 +52,6 @@
         {
             foreach($this->_publishers as $publisher)
             {
-                echo "PUBLISHING!!\n";
                 $publisher->publish($message);
             }
         }
