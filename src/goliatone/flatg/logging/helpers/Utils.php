@@ -7,8 +7,14 @@
          * DateTime format ISO8601 compatible
          * with JS construct.
          */
-        const ISO8601 = 'Y-m-d\TH:i:sP';
+        const ISO8601 = 'Y-m-d\T H:i:sP';
 
+        /**
+         * @param $object
+         * @param bool   $fullyQualified
+         * @param string $glue
+         * @return mixed
+         */
         static public function qualifiedClassName($object, $fullyQualified=TRUE, $glue='.')
         {
             $name      = get_class($object);
@@ -22,6 +28,10 @@
             return $className;
         }
 
+        /**
+         * @param string $default
+         * @return string
+         */
         static public function getServerAddress($default='localhost')
         {
             return (isset ($_SERVER['SERVER_ADDR'])) ? $_SERVER['SERVER_ADDR'] : $default;
@@ -52,6 +62,8 @@
         }
 
         /**
+         * Todo, it should take a method to stringify objects.
+         *
          * @param  string $message String template
          * @param  array  $context Context providing vars
          * @param  bool   $consume If true, missing matches will be
@@ -63,7 +75,7 @@
             $getMatchReplace = function($match, $context) use($consume){
                 $alt = $consume ? "" : "{".$match."}";
                 $out = array_key_exists($match, $context) ? $context[$match] : $alt;
-                return is_callable($out) ? call_user_func($out, $context, $match) : $out;
+                return is_callable($out) ? call_user_func_array($out, func_get_args()) : $out;
             };
 
             $replace = array();
