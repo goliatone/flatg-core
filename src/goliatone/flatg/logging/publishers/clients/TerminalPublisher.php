@@ -11,7 +11,7 @@
         public function publish(LogMessage $message)
         {
             $this->applyFormat($message);
-            echo $message->getMessage();
+            $this->flush($message);
         }
 
         /**
@@ -19,7 +19,8 @@
          */
         public function flush(LogMessage $message)
         {
-            // TODO: Implement flush() method.
+            // Terminal does not need delayed flushing :P
+            echo $message->getMessage();
         }
 
     }
