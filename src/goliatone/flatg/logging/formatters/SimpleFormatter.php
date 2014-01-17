@@ -7,9 +7,17 @@
 
     class SimpleFormatter implements ILogMessageFormatter
     {
-        public $pattern = "[{timestamp}] {level}: {message}\n";
+        public $pattern = "[{timestamp}] {padded_level}: {message}\n";
 
         public $consumeUnusedTokens = true;
+
+        public $transformer;
+
+        public function __construct()
+        {
+            $this->transformer = new TransformManager();
+            $this->transformer->configHandler("DateTime", array('format'=>'H:i:s'));
+        }
 
         /**
          * TODO: Maybe take in a string + array? Make it generic enough
@@ -23,17 +31,22 @@
          */
         public function format(LogMessage $message)
         {
-            $transformer = new TransformManager();
-            $context = $transformer->parseContext($message->getContext());
+            $context = $message->getContext();
+            //We pad level so that msg is nicely aligned. 9 = strlen('EMERGENCY');
+            $context['padded_level'] = str_pad($message->getLevel(), 9, " ", STR_PAD_LEFT);
+
+
+
+            $context = $this->transformer->parseContext($context);
 
             $message->consumeUnusedTokens = $this->consumeUnusedTokens;
-            $message->updateMessage();
-
             $text = Utils::stringTemplate($this->pattern,
                                           $context,
                                           $this->consumeUnusedTokens
                                          );
             $message->setMessage($text);
+            $message->updateMessage();
+
             return $message;
         }
 
