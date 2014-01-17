@@ -4,7 +4,7 @@
     class ResourceTransformer extends BaseTransformer
     {
 
-        public function transform($resource, $provider)
+        public function transform($resource, $provider = NULL)
         {
             return $provider->transform(stream_get_meta_data($resource), $provider);
         }
