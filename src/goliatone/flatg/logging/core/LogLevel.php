@@ -112,12 +112,12 @@ final class LogLevel
 
     /**
      * @param $level
-     * @return string
+     * @return LogLevel
      * @throws \InvalidArgumentException
      */
     static public function getLevel($level)
     {
-        if(is_a($level, 'goliatone\\flatg\\logging\\core\\LogLevel')) return $level;
+        if(is_a($level, __CLASS__)) return $level;
 
         if(is_int($level))
         {
