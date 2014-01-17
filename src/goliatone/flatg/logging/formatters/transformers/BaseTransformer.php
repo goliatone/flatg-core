@@ -1,8 +1,15 @@
 <?php namespace goliatone\flatg\logging\formatters\transformers {
 
+    use goliatone\flatg\logging\helpers\Utils;
+
     class BaseTransformer
     {
         protected $_extraArguments = array();
+
+        public function getName()
+        {
+            return Utils::qualifiedClassName($this, false);
+        }
 
         public function transform($resource, $provider)
         {
