@@ -52,6 +52,8 @@
         protected $_owner   = NULL;
 
         /**
+         * TODO: Do we want to force clients to be ILoggerAware?
+         *       Prob not!
          * @param ILoggerAware $owner
          */
         public function __construct(ILoggerAware $owner = NULL)
@@ -66,10 +68,10 @@
         /**
          * Logs with an arbitrary level.
          *
-         * @param mixed $level
+         * @param int|string|LogLevel $level
          * @param string $message
-         * @param array $context
-         * @return null
+         * @param array  $context
+         * @return $this
          */
         public function log($level, $message, array $context = array())
         {
@@ -78,23 +80,24 @@
 
             //Can we log this level?
             //First filter pass. We should have filter.isPreProcess()
-            if($this->_isFiltered($level)) return;
-
+            if($this->isFiltered($level)) return;
 
             //Build LogMessage
             $msg = $this->buildMessage($level, $message, $context, 3);
-
 
             //apply augmenters, this should extend the context with
             //custom data, ie: memory usage, request info.
             $msg = $this->applyAugmenters($msg);
 
+            //After creating log, and augmenting it we render message.
+            $msg->updateMessage();
 
             //Send to all the publishers that have been registered.
             //Publishers still have a change to decide if they
             //want to handle this event or not.
-            $this->_publish($msg);
+            $this->publish($msg);
 
+            return $this;
         }
 
         /**
@@ -106,12 +109,13 @@
          */
         public function buildMessage($level, $message, array $context = array(), $stackTraceSkip = 3)
         {
+            //TODO: We should have configured a stringifier here as well.
+            if(!is_string($message)) $message = print_r($message, true);
+
             $msg = new LogMessage($level, $message, $context);
             $msg->setLogger($this->getName());
             $msg->setTimestamp(new DateTime('NOW'));
-//            $tmp = $msg['timestamp'];
-//            $msg['timestamp']=function($context, $match)use($tmp){return date(Utils::ISO8601).$tmp->format(Utils::ISO8601);};
-//            $msg->setStackTrace(Debugger::backtrace($stackTraceSkip));
+            $msg->setStackTrace(Debugger::backtrace($stackTraceSkip));
 
             return $msg;
         }
@@ -153,7 +157,7 @@
          * @param $level
          * @return bool
          */
-        protected function _isFiltered($level)
+        public function isFiltered(LogLevel $level)
         {
             if($this->_enabled === FALSE) return TRUE;
 
@@ -164,7 +168,7 @@
         }
 
 
-        protected  function _publish(LogMessage $message)
+        public function publish(LogMessage $message)
         {
             $this->_publisher->publish($message);
         }
