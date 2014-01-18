@@ -175,7 +175,7 @@ final class LogLevel
         $level = self::getLevel($level);
 
         if($strict) return $this->getCode() !== $level->getCode();
-        else return !($level->getCode() > $this->getCode());
+        else return !($level->getCode() >= $this->getCode());
     }
 
     /**
