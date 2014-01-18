@@ -1,4 +1,7 @@
 <?php namespace goliatone\flatg\logging\helpers {
+
+
+    
     use goliatone\flatg\logging\core\ILogger;
     use goliatone\flatg\logging\core\LogLevel;
 
@@ -7,26 +10,56 @@
      * hook into the error life cycle and
      * report errors at will.
      *
+     * TODO: We should add or make sure we have an exception augmenter.
+     * TODO: We should add or make sure we have an error augmenter.
+     *
      * @package goliatone\flatg\logging\helpers
      */
     class ErrorLogger
     {
+        /**
+         * @var array
+         */
         private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
 
+        /**
+         *
+         */
         const EXCEPTION_MESSAGE        = 'Uncaught exception: {exception}';
 
+        /**
+         * @var null
+         */
         protected $_logger             = null;
 
+        /**
+         * @var null
+         */
         protected $_alertLevel         = null;
 
+        /**
+         * @var null
+         */
         protected $_errorHandler       = null;
 
+        /**
+         * @var null
+         */
         protected $_errorLevelMap      = null;
 
+        /**
+         * @var null
+         */
         protected $_exceptionMessage   = null;
 
+        /**
+         * @var null
+         */
         protected $_exceptionHandler   = null;
 
+        /**
+         * @var null
+         */
         protected $_exceptionThreshold = null;
 
         /**
@@ -34,6 +67,7 @@
          * @param null $errors
          * @param null $threshold
          * @param null $shutdown
+         * @return \goliatone\flatg\logging\helpers\ErrorLogger
          */
         static public function register(ILogger $logger, $errors=null, $threshold=null, $shutdown=null)
         {
@@ -62,7 +96,7 @@
         public function registerErrorHandler($levelMap = array(), $errorTypes = -1)
         {
             $this->_errorHandler  = set_error_handler(array($this, 'handleError'), $errorTypes);
-            $this->_errorLevelMap = array_replace(self::$defaultErrorLevelMap, $levelMap);
+            $this->_errorLevelMap = array_replace(self::$LEVEL_MAP, $levelMap);
         }
 
         /**
@@ -81,7 +115,7 @@
             //Let's get the LogLevel based on the provided map and defaults.
             $level = array_key_exists($code, $this->_errorLevelMap) ? $this->_errorLevelMap[$code] : LogLevel::$CRITICAL;
 
-            //TODO: We should add or make sure we have an error augmenter.
+
             $this->_logger->log(
                 $level,
                 $this->formatErrorMessage($code, $message),
@@ -114,7 +148,6 @@
         public function handleException(\Exception $e)
         {
             //Log this puppy!
-            //TODO: We should add or make sure we have an exception augmenter.
             $this->_logger->log(
                 $this->_exceptionThreshold,
                 $this->_exceptionMessage,
@@ -144,7 +177,7 @@
         public function handleShutdown()
         {
             $lastError = error_get_last();
-
+            //We only care for errors. If we have one, but is not considered fatal, exit.
             if(!$lastError || !in_array($lastError['type'], self::$fataErrors)) return;
 
             $this->_logger->log(
@@ -164,13 +197,20 @@
          */
         public function formatErrorMessage($code, $message, $type='exception')
         {
-            //shutdown
-            //'Fatal Error ('.self::$CODE_STRINGS[$lastError['type']].'): '.$lastError['message']
+            $template = self::$MESSAGES[$type];
+            $code     = self::$CODE_STRINGS[$code];
+            $context  = array('code'=>$code, 'message' => $message);
 
-            //exception
-            //self::codeToString($code).': '.$message
-            return 'TODO'
+            return Utils::stringTemplate($template, $context);
         }
+
+        /**
+         * @var array
+         */
+        static public $MESSAGES = array(
+            'exception' => "{code}: {message}",
+            'shutdown'  => "Fatal Error {code}: {message}",
+        );
 
         /**
          * @var array
@@ -196,7 +236,7 @@
         /**
          * @var array
          */
-        static public $defaultErrorLevelMap = array(
+        static public $LEVEL_MAP = array(
             E_ERROR             => LogLevel::CRITICAL,
             E_PARSE             => LogLevel::ALERT,
             E_NOTICE            => LogLevel::NOTICE,
