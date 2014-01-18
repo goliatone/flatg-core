@@ -1,4 +1,5 @@
 <?php namespace goliatone\flatg\logging\helpers {
+    use goliatone\flatg\logging\core\ILogger;
     use goliatone\flatg\logging\core\LogLevel;
 
     /**
@@ -16,7 +17,11 @@
 
         protected $_logger             = null;
 
+        protected $_alertLevel         = null;
+
         protected $_errorHandler       = null;
+
+        protected $_errorLevelMap      = null;
 
         protected $_exceptionMessage   = null;
 
@@ -24,30 +29,57 @@
 
         protected $_exceptionThreshold = null;
 
-
-        static public function register()
+        /**
+         * @param ILogger $logger
+         * @param null $errors
+         * @param null $threshold
+         * @param null $shutdown
+         */
+        static public function register(ILogger $logger, $errors=null, $threshold=null, $shutdown=null)
         {
+            $errorLogger = new ErrorLogger($logger);
 
+            if($errors)    $errorLogger->registerErrorHandler($errors);
+            if($threshold) $errorLogger->registerExceptionHandler($threshold);
+            if($shutdown)  $errorLogger->registerShutdownHandler($shutdown);
+
+            return $errorLogger;
         }
 
 
+        /**
+         * @param $logger
+         */
         public function __construct($logger)
         {
             $this->_logger = $logger;
         }
 
-
+        /**
+         * @param array $levelMap
+         * @param $errorTypes
+         */
         public function registerErrorHandler($levelMap = array(), $errorTypes = -1)
         {
-            $this->_errorHandler = set_error_handler(array($this, 'handleError'), $errorTypes);
+            $this->_errorHandler  = set_error_handler(array($this, 'handleError'), $errorTypes);
+            $this->_errorLevelMap = array_replace(self::$defaultErrorLevelMap, $levelMap);
         }
 
+        /**
+         * @param $code
+         * @param $message
+         * @param string $file
+         * @param int $line
+         * @param array $context
+         * @return bool|mixed
+         */
         public function handleError($code, $message, $file='', $line = 0, $context = array())
         {
             //Are we interested in this level?
             if (!($code & error_reporting())) return;
 
-            $level = array_key_exists($code, $this->_errorLevels) ? $this->_errorLevels[$code] : LogLevel::$CRITICAL;
+            //Let's get the LogLevel based on the provided map and defaults.
+            $level = array_key_exists($code, $this->_errorLevelMap) ? $this->_errorLevelMap[$code] : LogLevel::$CRITICAL;
 
             //TODO: We should add or make sure we have an error augmenter.
             $this->_logger->log(
@@ -63,16 +95,10 @@
             return call_user_func_array($this->_errorHandler, func_get_args());
         }
 
-        //TODO: do we need this?
-        public function restoreErrorHandler()
-        {
-            $handler = function(){};
-
-            if($this->_errorHandler) $handler = $this->_errorHandler;
-
-            set_error_handler($handler, $errorTypes);
-        }
-
+        /**
+         * @param null $threshold
+         * @param $message
+         */
         public function registerExceptionHandler($threshold = null, $message = EXCEPTION_MESSAGE )
         {
             $threshold || ($threshold  = LogLevel::$ERROR);
@@ -82,6 +108,9 @@
             $this->_exceptionHandler   = set_exception_handler(array($this, "handleException"));
         }
 
+        /**
+         * @param \Exception $e
+         */
         public function handleException(\Exception $e)
         {
             //Log this puppy!
@@ -99,22 +128,19 @@
 
         }
 
-        public function restoreExceptionHandler()
-        {
-            $handler = function(\Exception $e){};
-
-            if($this->_exceptionHandler) $handler = $this->_exceptionHandler;
-
-            set_exception_handler($handler);
-        }
-
+        /**
+         * @param null $level
+         */
         public function registerShutdownHandler($level = null)
         {
             register_shutdown_function(array($this, 'handleShutdown'));
 
-            $level && $this->_alertLevel;
+            $level && ($this->_alertLevel = $level);
         }
 
+        /**
+         *
+         */
         public function handleShutdown()
         {
             $lastError = error_get_last();
@@ -130,7 +156,12 @@
             );
         }
 
-
+        /**
+         * @param $code
+         * @param $message
+         * @param string $type
+         * @return string
+         */
         public function formatErrorMessage($code, $message, $type='exception')
         {
             //shutdown
@@ -141,7 +172,9 @@
             return 'TODO'
         }
 
-
+        /**
+         * @var array
+         */
         static public $CODE_STRINGS = array(
             E_ERROR             => 'E_ERROR',
             E_PARSE             => 'E_PARSE',
@@ -160,5 +193,25 @@
             E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR'
         );
 
+        /**
+         * @var array
+         */
+        static public $defaultErrorLevelMap = array(
+            E_ERROR             => LogLevel::CRITICAL,
+            E_PARSE             => LogLevel::ALERT,
+            E_NOTICE            => LogLevel::NOTICE,
+            E_STRICT            => LogLevel::NOTICE,
+            E_WARNING           => LogLevel::WARNING,
+            E_USER_ERROR        => LogLevel::ERROR,
+            E_CORE_ERROR        => LogLevel::CRITICAL,
+            E_DEPRECATED        => LogLevel::NOTICE,
+            E_USER_NOTICE       => LogLevel::NOTICE,
+            E_USER_WARNING      => LogLevel::WARNING,
+            E_CORE_WARNING      => LogLevel::WARNING,
+            E_COMPILE_ERROR     => LogLevel::ALERT,
+            E_COMPILE_WARNING   => LogLevel::WARNING,
+            E_USER_DEPRECATED   => LogLevel::NOTICE,
+            E_RECOVERABLE_ERROR => LogLevel::ERROR
+        );
     }
 }
