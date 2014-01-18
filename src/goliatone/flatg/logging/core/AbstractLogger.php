@@ -12,6 +12,11 @@
     abstract class AbstractLogger implements ILogger
     {
         /**
+         * @var bool
+         */
+        static public $DISABLED = FALSE;
+
+        /**
          * Logs with an arbitrary level.
          *
          * @param mixed $level
