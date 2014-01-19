@@ -47,6 +47,19 @@
     interface ILogPublisher
     {
 
+
+        /**
+         * @param $header
+         * @return mixed
+         */
+        public function setHeader($header);
+
+        /**
+         * @param $footer
+         * @return mixed
+         */
+        public function setFooter($footer);
+
         /**
          * @param  LogMessage $message
          * @return void
@@ -54,10 +67,11 @@
         public function publish(LogMessage $message);
 
         /**
-         * @param  LogMessage $message
+         * REVIEW: Do we want to have array in the signature?
+         * @param array|\goliatone\flatg\logging\core\LogMessage $message
          * @return mixed
          */
-        public function flush(LogMessage $message);
+        public function flush(array $message = null);
 
         /**
          * @param  string               $id
@@ -66,6 +80,10 @@
          */
         public function addFormatter($id, ILogMessageFormatter $formatter);
 
+        /**
+         * @return mixed
+         */
+        public function begin();
 
         /**
          * @return void
