@@ -23,6 +23,6 @@
          * @param  mixed $forItem
          * @return ILogger
          */
-        public function setLogger( $forItem);
+        public function getLogger( $forItem, $options = array());
     }
 }
