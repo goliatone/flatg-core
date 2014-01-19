@@ -200,7 +200,14 @@ final class LogLevel
     }
 }
 
-
+//////////////////////////////////////////////
+/*
+ * I know, this is ugly, but oh well.
+ * We want to have a static reference to
+ * an actual LogLevel instance.
+ * We create them at runtime.
+ */
+//////////////////////////////////////////////
 if(!LogLevel::$ALL)
 {
     foreach(LogLevel::$levels as $code => $label)
