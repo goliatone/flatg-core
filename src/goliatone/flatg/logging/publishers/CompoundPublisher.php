@@ -6,6 +6,8 @@
 
     /**
      * TODO: Rename to CompositePublisher.
+     * TODO: Extend TypedCompound or whatever, we want it DRY.
+     *
      * Class CompoundPublisher
      * @package goliatone\flatg\logging\publishers
      */
@@ -42,6 +44,7 @@
         {
             if($this->has($id)) return $this->_publishers[$id];
 
+            //TODO: Make NullPublisher, which is a NOOP, so we can get rid of logic.
             if($default) return $default;
 
             throw new \Exception("TODO: We need to handle default Publisher. Return here");
@@ -55,18 +58,6 @@
             return array_key_exists($id, $this->_publishers);
         }
 
-
-        /**
-         * @param LogMessage $message
-         */
-        public function publish(LogMessage $message)
-        {
-            foreach($this->_publishers as $publisher)
-            {
-                $publisher->publish($message);
-            }
-        }
-
         /**
          * @param  string $id
          * @param  ILogMessageFormatter $formatter
@@ -74,8 +65,18 @@
          */
         public function addFormatter($id, ILogMessageFormatter $formatter)
         {
-
             $this->get($id)->addFormatter($id, $formatter);
+
+            return $this;
+        }
+
+        /**
+         * @param LogMessage $message
+         * @return $this
+         */
+        public function publish(LogMessage $message)
+        {
+            $this->walk(__FUNCTION__, func_get_args());
 
             return $this;
         }
@@ -85,10 +86,7 @@
          */
         public function begin()
         {
-            foreach($this->_publishers as $publisher)
-            {
-                $publisher->begin();
-            }
+            $this->walk(__FUNCTION__);
             return $this;
         }
 
@@ -97,11 +95,7 @@
          */
         public function terminate()
         {
-            foreach($this->_publishers as $publisher)
-            {
-                $publisher->terminate();
-            }
-
+            $this->walk(__FUNCTION__);
             return $this;
         }
 
@@ -120,15 +114,26 @@
          */
         public function flush(array $messages = null)
         {
-            foreach($this->_publishers as $publisher)
-            {
-                $publisher->flush($messages);
-            }
+            $this->walk(__FUNCTION__, func_get_args());
 
             return $this;
         }
 
-        //TODO: Implement somethign like this.
+        /**
+         * @param $action
+         * @param array $arguments
+         */
+        protected function walk($action, $arguments = array())
+        {
+            foreach($this->_publishers as $publisher)
+            {
+                call_user_func_array(array($publisher, $action), $arguments);
+            }
+        }
+
+        /**
+         * @param $callback
+         */
         public function each($callback)
         {
             $iterator = $this->getIterator();
