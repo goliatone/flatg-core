@@ -4,9 +4,16 @@
     use goliatone\flatg\logging\helpers\Utils;
 
 
+    /**
+     * Class TerminalPublisher
+     * @package goliatone\flatg\logging\publishers\clients
+     */
     class TerminalPublisher extends AbstractPublisher
     {
 
+        /**
+         * @var string
+         */
         public $header = <<< HEADER
 *************************************
 GOLIATONE TALKING OUT LOUD!!
@@ -14,6 +21,9 @@ Start Time: {start_time}
 *************************************\n
 HEADER;
 
+        /**
+         * @var string
+         */
         public $footer = <<< FOOTER
 -------------------------------------
 TOTAL LOGS   : {total_logs}
@@ -32,6 +42,9 @@ FOOTER;
             echo $message->getMessage();
         }
 
+        /**
+         *
+         */
         public function begin()
         {
             $strTime = date('H:i:s', $this->startTime);
@@ -39,6 +52,9 @@ FOOTER;
             echo  $header;
         }
 
+        /**
+         *
+         */
         public function terminate()
         {
             $total   = count($this->messages);
