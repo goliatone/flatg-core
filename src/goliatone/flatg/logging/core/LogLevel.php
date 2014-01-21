@@ -13,7 +13,7 @@ final class LogLevel
 // LogLevel NUMERICAL CODES
 ///////////////////////////////////////////////////
     /**
-     *
+     * Do not let any events to go through
      */
     const OFF       = 0xFFFFFF;
 
@@ -71,7 +71,7 @@ final class LogLevel
 
 
     /**
-     *
+     * Allow all events to go through
      */
     const ALL       = 0;
 
@@ -175,7 +175,7 @@ final class LogLevel
         $level = self::getLevel($level);
 
         if($strict) return $this->getCode() !== $level->getCode();
-        else return !($level->getCode() >= $this->getCode());
+        else return ($this->getCode() >= $level->getCode());
     }
 
     /**
