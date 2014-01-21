@@ -3,13 +3,15 @@
 
 
     /**
+     * TODO Create BaseObject that implements IConfigurable, IFiltrable
+     *
      * Class AbstractLogger, base implementation.
      * It will delegate all level specific methods
      * to the `log` method.
      *
      * @package goliatone\flatg\logging\core
      */
-    abstract class AbstractLogger implements ILogger
+    abstract class AbstractLogger extends CoreObject implements ILogger
     {
         /**
          * @var bool
