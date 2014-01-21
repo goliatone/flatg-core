@@ -1,9 +1,11 @@
 <?php namespace goliatone\flatg\logging\publishers\clients {
 
 
+    use goliatone\flatg\logging\core\CoreObject;
     use goliatone\flatg\logging\core\LogMessage;
     use goliatone\flatg\logging\core\ILogPublisher;
     use goliatone\flatg\logging\core\ILogMessageFormatter;
+    use goliatone\flatg\logging\filters\LogFilter;
     use goliatone\flatg\logging\formatters\CompoundFormatter;
     use goliatone\flatg\logging\helpers\Utils;
 
@@ -13,7 +15,7 @@
      * Class AbstractPublisher
      * @package goliatone\flatg\logging\publishers\clients
      */
-    abstract class AbstractPublisher implements ILogPublisher
+    abstract class AbstractPublisher extends CoreObject implements ILogPublisher
     {
 
         /**
@@ -34,7 +36,18 @@
         /**
          * @var bool
          */
-        public $asynchronous = FALSE;
+        public $asynchronous = false;
+
+
+        /**
+         * @var bool
+         */
+        protected $begun      = false;
+
+        /**
+         * @var bool
+         */
+        protected $terminated = false;
 
 ///////////////////////////////////////
 //      TODO: Move to Debugger::stopWatch?
@@ -73,7 +86,7 @@
         /**
          * @var bool
          */
-        protected $_runOnConstruct = TRUE;
+        protected $_runOnConstruct = true;
 
         /**
          *
@@ -82,11 +95,11 @@
         {
             $this->_formatter = new CompoundFormatter();
             $this->_defaultFormatterClass = 'goliatone\flatg\logging\formatters\SimpleFormatter';
+            $this->_filter = new LogFilter();
 
             if($this->_runOnConstruct)
                 $this->doBegin();
         }
-
 
         /**
          * @inheritdoc
@@ -97,11 +110,16 @@
 
             if($this->asynchronous) return $this;
 
+            if($this->filtersMessage($message)) return;
+
             $this->onPublish($message);
 
             return $this;
         }
 
+        /**
+         * @param LogMessage $message
+         */
         protected function onPublish(LogMessage $message)
         {
             //This has to be overwritten
@@ -143,6 +161,10 @@
          */
         protected function doBegin()
         {
+            if($this->begun) return;
+
+            $this->begun = true;
+
             $this->startTime = microtime(true);
 
             $this->begin();
@@ -161,6 +183,10 @@
          */
         protected function doTerminate()
         {
+            if($this->terminated) return;
+
+            $this->terminated = true;
+
             if($this->asynchronous) $this->flush();
 
             $this->endTime = microtime(true);
@@ -220,7 +246,7 @@
          * @param bool $consume
          * @return string
          */
-        protected function stringTemplate($message, $context, $consume = TRUE)
+        protected function stringTemplate($message, $context, $consume = true)
         {
             return Utils::stringTemplate($message, $context, $consume);
         }
