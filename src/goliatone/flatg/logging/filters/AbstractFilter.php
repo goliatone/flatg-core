@@ -7,29 +7,104 @@
 
     /**
      * TODO: Implement MaxBurst, Rate, Threshold, Time
-     * RegExp, Marker, Map, DynamicThreshold. CompositeFilter and
+     * RegExp, Marker, Map, DynamicThreshold.  and
      * FilterManager.
-     * 
+     *
      * Class AbstractFilter
      * @package goliatone\flatg\logging\filters
      */
     abstract class AbstractFilter implements ILogFilter
     {
         /**
-         * @var null
+         * We set DENY to 0 since it will evaluate
+         * to falsy.
+         */
+        const DENY    = 0;
+
+        /**
+         * Filter does not care about the current event.
+         */
+        const NEUTRAL = -1;
+
+        /**
+         * Filter can take this event.
+         */
+        const ACCEPT  = 1;
+
+        /**
+         * @var LogLevel
+         * @access protected
          */
         protected $_level = null;
 
         /**
-         * @var null
+         * @var string
+         * @access protected
          */
         protected $_namespace = null;
 
         /**
          * @var bool
+         * @access protected
          */
         protected $_isPreProcess = FALSE;
 
+
+        /**
+         * @var int
+         * @access protected
+         */
+        protected $_onMatch     = AbstractFilter::DENY;
+
+        /**
+         * @var int
+         * @access protected
+         */
+        protected $_onMisMatch  = AbstractFilter::NEUTRAL;
+
+
+        /**
+         * @var bool
+         */
+        protected $_initialized = false;
+
+        /**
+         * @var ILogFilter
+         */
+        protected $_next        = null;
+
+        /**
+         *
+         */
+        public function __construct()
+        {
+            $this->initialize();
+        }
+
+        /**
+         *
+         */
+        public function initialize()
+        {
+            if($this->_initialized) return;
+            $this->_initialized = true;
+
+            //TODO Move to BaseObject
+
+            //TODO: We should pick this one up based on Environment.
+            //so that in DEV we get $ALL, and in PROD we get $ERROR.
+            $this->_level = LogLevel::$ALL;
+
+            $this->doInitialize();
+        }
+
+        /**
+         *
+         */
+        public function doInitialize()
+        {
+
+        }
 
         /**
          * Returns TRUE if the filter can
@@ -43,7 +118,26 @@
          */
         public function sift(LogMessage $message)
         {
-            // TODO: Implement collect() method.
+            //TODO: Think about the values of DENY|ACCEPT|NEUTRAL only 0 evaluates to false
+            $filter = $this->_next;
+            while($filter !== null) {
+                switch ($filter->sift($message)) {
+                    case AbstractFilter::DENY   : return AbstractFilter::DENY;
+                    case AbstractFilter::ACCEPT : return AbstractFilter::ACCEPT;
+                    case AbstractFilter::NEUTRAL: $filter = $filter->getNext();
+                }
+            }
+
+            return $this->doSift($message);
+        }
+
+        /**
+         * @param LogMessage $message
+         * @return int
+         */
+        protected function doSift(LogMessage $message)
+        {
+            return AbstractFilter::NEUTRAL;
         }
 
         /**
@@ -56,15 +150,36 @@
          */
         public function isPreProcess()
         {
-            // TODO: Implement isPreProcess() method.
+            return $this->_isPreProcess;
         }
 
         /**
          * @return ILogFilter
          */
-        public function getParent()
+        public function getNext()
         {
-            // TODO: Implement getParent() method.
+            return $this->_next;
+        }
+
+        /**
+         * @param ILogFilter $filter
+         * @return $this
+         */
+        public function addNext(ILogFilter $filter)
+        {
+            if($this->_next) $this->_next->addNext($filter);
+            else $this->_next = $filter;
+
+            return $this;
+        }
+
+        /**
+         * @return $this
+         */
+        public function clear()
+        {
+            $this->_next = null;
+            return $this;
         }
 
         /**
@@ -85,7 +200,7 @@
         }
 
         /**
-         * Defaults to NULL, thus not
+         * Defaults to `NULL`, thus not
          * filtering any namespace.
          *
          * @return string
@@ -96,39 +211,23 @@
         }
 
         /**
-         * @param $rate
+         * @param  int $action
          * @return $this
          */
-        public function setRate($rate)
+        public function onMatchShould($action)
         {
-            // TODO: Implement setRate() method.
+            $this->_onMatch = $action;
+            return $this;
         }
 
         /**
-         * @param $burst
+         * @param  int $action
          * @return $this
          */
-        public function setBurst($burst)
+        public function onMisMatchShould($action)
         {
-            // TODO: Implement setBurst() method.
-        }
-
-        /**
-         * @param string $match
-         * @return $this
-         */
-        public function setMatch($match)
-        {
-            // TODO: Implement setMatch() method.
-        }
-
-        /**
-         * @param string $mismatch
-         * @return $this
-         */
-        public function setMismatch($mismatch)
-        {
-            // TODO: Implement setMismatch() method.
+            $this->_onMisMatch = $action;
+            return $this;
         }
     }
 }

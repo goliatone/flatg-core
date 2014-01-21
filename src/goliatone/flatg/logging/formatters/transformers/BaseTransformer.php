@@ -52,8 +52,8 @@
 
         /**
          * @param $resource
-         * @param $provider
-         * @internal param array|null $options
+         * @param null $provider
+         * @return mixed|void
          */
         public function transform($resource, $provider = NULL)
         {
