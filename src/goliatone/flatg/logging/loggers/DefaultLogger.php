@@ -2,16 +2,18 @@
 
     use \DateTime;
 
-    use goliatone\flatg\logging\augmenters\CallbackAugmenter;
-    use goliatone\flatg\logging\core\ILogAugmenter;
     use goliatone\flatg\logging\Debugger;
+    use goliatone\flatg\logging\helpers\Utils;
     use goliatone\flatg\logging\core\LogLevel;
+    use goliatone\flatg\logging\core\ILogFilter;
     use goliatone\flatg\logging\core\LogMessage;
     use goliatone\flatg\logging\core\ILoggerAware;
+    use goliatone\flatg\logging\filters\LogFilter;
+    use goliatone\flatg\logging\core\ILogAugmenter;
     use goliatone\flatg\logging\core\ILogPublisher;
     use goliatone\flatg\logging\core\AbstractLogger;
     use goliatone\flatg\logging\core\ILogMessageFormatter;
-    use goliatone\flatg\logging\helpers\Utils;
+    use goliatone\flatg\logging\augmenters\CallbackAugmenter;
     use goliatone\flatg\logging\publishers\CompoundPublisher;
 
     /**
@@ -43,12 +45,10 @@
          */
         protected $_threshold;
 
-
         /**
          * @var
          */
         protected $_fullyQualifiedClassName;
-
 
         /**
          * @var string
@@ -58,20 +58,25 @@
         /**
          * @var null
          */
-        protected $_owner   = NULL;
+        protected $_owner   = null;
+
+
+        protected $_filter = null;
 
         /**
          * TODO: Do we want to force clients to be ILoggerAware?
          *       Prob not!
          * @param ILoggerAware $owner
          */
-        public function __construct(ILoggerAware $owner = NULL)
+        public function __construct(ILoggerAware $owner = null)
         {
             $this->setOwner($owner);
 
             $this->_publisher = new CompoundPublisher();
 
             $this->_threshold = LogLevel::$ALL;
+
+            $this->_filter = new LogFilter();
         }
 
         /**
@@ -89,7 +94,7 @@
 
             //Can we log this level?
             //First filter pass. We should have filter.isPreProcess()
-            if($this->isFiltered($level)) return;
+            if($this->isEnabledFor($level)) return;
 
             //Build LogMessage
             $msg = $this->buildMessage($level, $message, $context, 3);
@@ -101,6 +106,10 @@
             //After creating log, and augmenting it we render message.
             $msg->updateMessage();
 
+            //TODO: So, apparently filters do need a full LogMessage to do it's
+            //thing. Could we also take levels? Packages? so we have siftLevel/siftNamespace?
+            if($this->filtersMessage($msg)) return;
+
             //Send to all the publishers that have been registered.
             //Publishers still have a change to decide if they
             //want to handle this event or not.
@@ -108,6 +117,9 @@
 
             return $this;
         }
+
+
+
 
         /**
          * @param $level
@@ -165,11 +177,12 @@
 
 
 
+
         /**
          * @param $level
          * @return bool
          */
-        public function isFiltered(LogLevel $level)
+        public function isEnabledFor(LogLevel $level)
         {
             //Is logging disabled globally?
             if(static::$DISABLED) return TRUE;
@@ -180,8 +193,8 @@
             //Provided level is filtered by the threshold!
             if($this->_threshold->filters($level)) return TRUE;
 
-            //TODO: We should have filters, and based on which level
-//            if($this->filters->filters($level, $this)) return TRUE;
+            //TODO: Can we filter based on level? Package?
+//            if($this->_filter->sift($level)) return TRUE;
 
             // we have up or what package is disabled, etc.
             return FALSE;
