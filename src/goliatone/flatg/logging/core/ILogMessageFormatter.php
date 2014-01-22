@@ -25,5 +25,10 @@
          * @return LogMessage
          */
         public function format(LogMessage $message);
+
+        /**
+         * @return string
+         */
+        public function getName();
     }
 }
