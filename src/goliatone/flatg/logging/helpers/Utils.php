@@ -17,6 +17,8 @@
          */
         static public function qualifiedClassName($object, $fullyQualified=TRUE, $glue='.')
         {
+            if(is_string($object)) return $object;
+
             $name      = get_class($object);
             $className = str_replace("\\", $glue, $name);
 
