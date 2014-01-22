@@ -5,14 +5,31 @@
     use goliatone\flatg\logging\formatters\transformers\TransformManager;
     use goliatone\flatg\logging\helpers\Utils;
 
+    /**
+     * Class SimpleFormatter
+     * @package goliatone\flatg\logging\formatters
+     */
     class SimpleFormatter implements ILogMessageFormatter
     {
+
+        /**
+         * @var string
+         */
         public $pattern = "[{timestamp}] {padded_level}: {message}\n";
 
+        /**
+         * @var bool
+         */
         public $consumeUnusedTokens = true;
 
+        /**
+         * @var transformers\TransformManager
+         */
         public $transformer;
 
+        /**
+         *
+         */
         public function __construct()
         {
             $this->transformer = new TransformManager();
@@ -50,6 +67,12 @@
             return $message;
         }
 
-
+        /**
+         * @return string
+         */
+        public function getName()
+        {
+            return __CLASS__;
+        }
     }
 }
