@@ -5,7 +5,6 @@
     use goliatone\flatg\logging\Debugger;
     use goliatone\flatg\logging\helpers\Utils;
     use goliatone\flatg\logging\core\LogLevel;
-    use goliatone\flatg\logging\core\ILogFilter;
     use goliatone\flatg\logging\core\LogMessage;
     use goliatone\flatg\logging\core\ILoggerAware;
     use goliatone\flatg\logging\filters\LogFilter;
@@ -61,22 +60,23 @@
         protected $_owner   = null;
 
 
-        protected $_filter = null;
+        /**
+         * @var \goliatone\flatg\logging\filters\LogFilter
+         */
+        protected $_filter  = null;
 
         /**
          * TODO: Do we want to force clients to be ILoggerAware?
          *       Prob not!
          * @param ILoggerAware $owner
          */
-        public function __construct(ILoggerAware $owner = null)
+        public function __construct(/*ILoggerAware*/ $owner = null)
         {
             $this->setOwner($owner);
 
+            $this->_filter    = new LogFilter();
             $this->_publisher = new CompoundPublisher();
-
             $this->_threshold = LogLevel::$ALL;
-
-            $this->_filter = new LogFilter();
         }
 
         /**
@@ -118,9 +118,6 @@
             return $this;
         }
 
-
-
-
         /**
          * @param $level
          * @param $message
@@ -140,7 +137,6 @@
 
             return $msg;
         }
-
 
         /**
          * @param $callable
@@ -174,9 +170,6 @@
 
             return $message;
         }
-
-
-
 
         /**
          * @param $level
