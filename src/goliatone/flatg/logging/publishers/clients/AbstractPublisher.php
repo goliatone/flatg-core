@@ -87,18 +87,16 @@
          * @var bool
          */
         protected $_runOnConstruct = true;
-
         /**
          *
          */
         function __construct()
         {
             $this->_formatter = new CompoundFormatter();
-            $this->_defaultFormatterClass = 'goliatone\flatg\logging\formatters\SimpleFormatter';
+            $this->_defaultFormatterClass = 'goliatone\\flatg\\logging\\formatters\\SimpleFormatter';
             $this->_filter = new LogFilter();
 
-            if($this->_runOnConstruct)
-                $this->doBegin();
+            if($this->_runOnConstruct) $this->doBegin();
         }
 
         /**
@@ -162,7 +160,7 @@
         protected function doBegin()
         {
             if($this->begun) return;
-
+//            throw new \Exception('fuck');
             $this->begun = true;
 
             $this->startTime = microtime(true);
@@ -173,10 +171,7 @@
         /**
          *
          */
-        public function begin()
-        {
-
-        }
+        public function begin(){}
 
         /**
          *
@@ -215,8 +210,9 @@
          * @param  ILogMessageFormatter $formatter
          * @return $this|ILogPublisher
          */
-        public function addFormatter($id, ILogMessageFormatter $formatter)
+        public function addFormatter(ILogMessageFormatter $formatter)
         {
+            $id = $formatter->getName();
             $this->_formatter->add($id, $formatter);
 
             return $this;
