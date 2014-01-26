@@ -78,7 +78,7 @@
          * @param  ILogMessageFormatter $formatter
          * @return ILogPublisher
          */
-        public function addFormatter($id, ILogMessageFormatter $formatter);
+        public function addFormatter(ILogMessageFormatter $formatter);
 
         /**
          * @return mixed
