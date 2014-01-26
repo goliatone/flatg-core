@@ -17,7 +17,7 @@
         protected $_formatters = array();
 
 
-        public function add($id,ILogMessageFormatter $formatter)
+        public function add($id, ILogMessageFormatter $formatter)
         {
             $this->_formatters[$id] = $formatter;
         }
