@@ -64,8 +64,8 @@
         }
 
         /**
-         * Todo, it should take a method to stringify objects.
-         *
+         * TODO: it should take a method to stringify objects.
+         * TODO: Use $cStart = { and $cEnd = } so we can match at will
          * @param  string $message String template
          * @param  array  $context Context providing vars
          * @param  bool   $consume If true, missing matches will be
