@@ -43,7 +43,7 @@ FOOTER;
         }
 
         /**
-         *
+         * TODO: Should we wait to have one log event before publishing this?
          */
         public function begin()
         {
@@ -53,7 +53,7 @@ FOOTER;
         }
 
         /**
-         *
+         * TODO: Should we wait to have one log event before publishing this?
          */
         public function terminate()
         {
