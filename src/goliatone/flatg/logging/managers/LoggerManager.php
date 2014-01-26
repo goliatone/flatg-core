@@ -22,7 +22,7 @@
         /**
          * @var CachedHash
          */
-        protected $_cache;
+        protected $cache;
 
         /**
          * @var \goliatone\flatg\di\IOC
@@ -73,7 +73,7 @@
          */
         public function __construct()
         {
-            $this->_cache = new CachedHash();
+            $this->cache = new CachedHash();
             $this->ioc = new IOC();
 
         }
@@ -87,9 +87,9 @@
          */
         public function buildLogger($forItem, $options = array())
         {
-            //should we serialize options and package...
+            //should we serialize options and package?
             $key = $this->buildKey($forItem, $options);
-            return $this->_cache->get($key, array($this, 'build'), $forItem, $options);
+            return $this->cache->get($key, array($this, 'build'), $forItem, $options);
         }
 
         /**
@@ -119,7 +119,7 @@
             $logger = $this->ioc->build($reference);
 
             //we should configure logger.
-            
+
             return $logger;
         }
 
