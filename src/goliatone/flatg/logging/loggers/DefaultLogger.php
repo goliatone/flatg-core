@@ -70,10 +70,15 @@
          *       Prob not!
          * @param ILoggerAware $owner
          */
-        public function __construct(/*ILoggerAware*/ $owner = null)
+        public function __construct(/*ILoggerAware*/ $owner = null, $config = array())
         {
             $this->setOwner($owner);
+            $this->reset();
+            if($config) $this->configure($config);
+        }
 
+        public function reset()
+        {
             $this->_filter    = new LogFilter();
             $this->_publisher = new CompoundPublisher();
             $this->_threshold = LogLevel::$ALL;
@@ -203,27 +208,13 @@
         }
 
         /**
-         * @param $id
          * @param ILogPublisher $publisher
          * @return $this
          */
-        public function addPublisher($id, ILogPublisher $publisher)
+        public function addPublisher(ILogPublisher $publisher)
         {
+            $id = $publisher->getName();
             $this->_publisher->add($id, $publisher);
-            return $this;
-        }
-
-        //TODO: Should we have a setFormatterToPublisher($publisherId, $formatter)
-        //or should publisher request formatter? Or should we move this method to
-        //the ILogPublisher?
-        /**
-         * @param $publisherId
-         * @param ILogMessageFormatter $formatter
-         * @return $this
-         */
-        public function addFormatter($publisherId, ILogMessageFormatter $formatter)
-        {
-            $this->_publisher->addFormatter($publisherId, $formatter);
             return $this;
         }
 
