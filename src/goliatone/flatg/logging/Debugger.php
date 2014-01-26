@@ -214,6 +214,7 @@
 
             $params = null;
 
+            /** @var $function callable */
             if( !empty($class) || function_exists($function))
             {
                 try {
@@ -229,9 +230,7 @@
 
                         $reflection = new ReflectionMethod($class, $function);
 
-                    } else {
-                        $reflection = new ReflectionFunction($function);
-                    }
+                    } else $reflection = new ReflectionFunction($function);
 
                     $params = $reflection->getParameters();
 
