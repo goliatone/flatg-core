@@ -20,7 +20,7 @@
         protected $_publishers = array();
 
         /**
-         * We name it add insteda of addPublisher to
+         * We name it add instead of addPublisher to
          * remain consistent with CompoundFormatter.
          * Should both extend a base class?
          *
@@ -63,8 +63,9 @@
          * @param  ILogMessageFormatter $formatter
          * @return ILogPublisher
          */
-        public function addFormatter($id, ILogMessageFormatter $formatter)
+        public function addFormatter(ILogMessageFormatter $formatter)
         {
+            $id = $formatter->getName();
             $this->get($id)->addFormatter($id, $formatter);
 
             return $this;
