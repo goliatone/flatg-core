@@ -14,7 +14,7 @@
         protected $drivers = array();
 
         /**
-         * @var AbstractDriver
+         * @var AbstractConfigDriver
          */
         public $driver;
 
@@ -28,13 +28,12 @@
          */
         public function __construct()
         {
-
-            $this->registerDriver('xml',  'XmlConfigDriver');
-            $this->registerDriver('php',  'PhpConfigDriver');
-            $this->registerDriver('json', 'JsonConfigDriver');
-            $this->registerDriver('ini',  'IniConfigDriver');
-            $this->registerDriver('yml',  'YamlConfigDriver');
-            $this->registerDriver('yaml', 'YamlConfigDriver');
+            $this->registerDriver('xml',  'goliatone\\flatg\\config\\drivers\\XmlConfigDriver');
+            $this->registerDriver('php',  'goliatone\\flatg\\config\\drivers\\PhpConfigDriver');
+            $this->registerDriver('json', 'goliatone\\flatg\\config\\drivers\\JsonConfigDriver');
+            $this->registerDriver('ini',  'goliatone\\flatg\\config\\drivers\\IniConfigDriver');
+            $this->registerDriver('yml',  'goliatone\\flatg\\config\\drivers\\YamlConfigDriver');
+            $this->registerDriver('yaml', 'goliatone\\flatg\\config\\drivers\\YamlConfigDriver');
         }
 
         /**
@@ -47,13 +46,28 @@
         }
 
 
+        /**
+         * @param $filename
+         * @return mixed
+         * @throws \InvalidArgumentException
+         */
         public function import($filename)
         {
+            if(!file_exists($filename))
+            {
+                throw new \InvalidArgumentException("Configuration file {$filename} not loaded");
+            }
+
             $driver = $this->driverFromPath($filename);
             return $driver->import($filename);
         }
 
 
+        /**
+         * @param $path
+         * @param array $data
+         * @return mixed
+         */
         public function save($path, $data)
         {
             $driver = $this->driverFromPath($path);
@@ -62,9 +76,15 @@
 
 
         //TODO: This is ugly, how do we mange?
+        /**
+         * @param string $content
+         */
         public function load($content){}
 
         //TODO: This is ugly, how do we mange?
+        /**
+         * @param array $content
+         */
         public function format($content){}
 
         /**
