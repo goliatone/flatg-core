@@ -15,7 +15,7 @@
         {
             $output = $this->format($data);
 
-            $file = new SplFileObject($path, "w");
+            $file = new \SplFileObject($path, "w");
             if(!$file->fwrite($output))
             {
                 //We were unable to save the file
@@ -27,11 +27,6 @@
 
         public function import($path)
         {
-            if(!file_exists($path))
-            {
-                throw new \InvalidArgumentException("Configuration file {$path} not loaded");
-            }
-
             $this->path = $path;
 
             $content = file_get_contents($path);
