@@ -14,26 +14,24 @@ class DefaultController
     /**
      * 
      */
-    public function home($params=array())
+    static public function home($params = array())
     {
-        FlatG::$router->redirect('beta'); 
-    }   
+        FlatG::$router->redirect('beta');
+    }
     
     /**
      * 
      */
-    public function error404($params=array())
+    static public function error404($params = array())
     {
         //TODO: MAKE A PROPER METHOD. 
         //TODO: Handle header, send out a proper 404;
-        if(FlatG::isAJAX()) 
-            return FlatG::renderJSON(array('error'=>'Page not found', 
+        if (FlatG::isAJAX())
+            return FlatG::renderJSON(array('error'=>'Page not found',
                                            'status'=>'404',
                                            'url'=>FlatG::$router->requestUrl
                                     ));
         
-        FlatG::render('404', $params, 'layout');  
-    } 
-    
-    
+        FlatG::render('404', $params, 'layout');
+    }    
 }
