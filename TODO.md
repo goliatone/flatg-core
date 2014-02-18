@@ -103,6 +103,8 @@ Add event listener to 'sync.complete' and purge
 cache or rebuild.
 We could take the further and make the whole site
 _partially_ static(?)
+Check this out:
+https://github.com/Anahkiasen/flatten/blob/master/src/Flatten/Flatten.php
 
 ### Decouple file handling, use File helper.
 
@@ -123,30 +125,44 @@ http://stackoverflow.com/questions/9379530/append-path-directory-to-url-using-ht
 http://stackoverflow.com/questions/15917258/remove-php-from-urls-with-htaccess
 
 
-#####
+#### Mocking
 Mocking HTTP Requests
 
 FlatG gives you the ability to simulate HTTP requests from within your PHP program so you can test the behavior of a particular route, just as if a website visitor requested that page through a browser.
 
 Here's a simple mock request:
 
-FlatG::set('QUIET',TRUE);  // do not show output of the active route
-FlatG::mock('GET /test');  // set the route that f3 will run
-FlatG::run();  // run the route
-// run tests using expect() as shown above
-// ...
-FlatG::set('QUIET',FALSE); // allow test results to be shown later
-FlatG::clear('ERROR');  // clear any errors
-Tip: If you have a route defined with token parameters, i.e. /test/@name, you can test that route by setting a value for the token in the mock command, and access that value during testing from FlatG's PARAMS assoc array
+```php
 
-FlatG::mock('GET /test/steve'); 
-FlatG::run();
-$name = FlatG::get('PARAMS["name"]');
-$test->expect(
-    $name =="steve",
-    'Uri param "name" equals "steve"'
-);
+   FlatG::set('QUIET',TRUE);  // do not show output of the active route
+   FlatG::mock('GET /test');  // set the route that f3 will run
+   FlatG::run();  // run the route
+
+   // run tests using expect() as shown above
+   // ...
+
+   FlatG::set('QUIET',FALSE); // allow test results to be shown later
+   FlatG::clear('ERROR');  // clear any errors
+
+   //Tip: If you have a route defined with token parameters, i.e. /test/@name, you can test that route by setting a value for the token in the mock command, and access that value during testing from FlatG's PARAMS assoc array
+
+    FlatG::mock('GET /test/steve');
+    FlatG::run();
+    $name = FlatG::get('PARAMS["name"]');
+    $test->expect(
+        $name =="steve",
+        'Uri param "name" equals "steve"'
+    );
+```
 To mock a POST request and submit a simulated HTML form:
 
-FlatG::mock('POST /test', array('foo'=>'bar')); // pass in form values using assoc array
+`FlatG::mock('POST /test', array('foo'=>'bar'));` // pass in form values using assoc array
 Tip: When using mock, or displaying test results using a rendered template, or testing something in your database, you need to include config settings for FlatG so it knows the location of your templates, db parameters, etc.
+
+
+### CLI integration
+How to recognize if on CLI?
+php_sapi_name() in_array('cgi|cgi-fcgi|cli')
+
+
+http://stackoverflow.com/questions/933367/php-how-to-best-determine-if-the-current-invocation-is-from-cli-or-web-server
