@@ -307,7 +307,7 @@ class FlatG {
             //an instance, since this would only work on static methods.
             $_Controller = $callback[0];
             call_user_func($_Controller::$callback[1], $arguments);
-            
+
         } else throw new ErrorException('Internal Router Error 500 '.print_r($callback), 500);
     }
 
