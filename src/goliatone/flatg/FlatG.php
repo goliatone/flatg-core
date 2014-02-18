@@ -182,6 +182,12 @@ class FlatG {
         return $content;
     }
 
+    static public function get($array, $key, $default = FALSE)
+    {
+        if(array_key_exists($key, $array)) return $array[$key];
+        return $default;
+    }
+
     /**
      * @return string
      */
