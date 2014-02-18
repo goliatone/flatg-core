@@ -191,7 +191,7 @@ class View
     public function getPath($filename = '')
     {
         $filename = $filename ? $filename : $this->getFilename();
-        return realpath($this->_viewDirectory.DIRECTORY_SEPARATOR).$filename;
+        return realpath($this->_viewDirectory).DIRECTORY_SEPARATOR.$filename;
     }
 
 
