@@ -84,6 +84,11 @@ plugin listeners without loading the module.
 Add theme info file. Preview. Manager. How do we 
 select active theme? We need to update configuration.
 
+### View:
+- Manage rendering partials.
+- Review current render view strategy. We should handle all in View class.
+- We should be able to render a file that needs no layout!!!
+
 ### Error Handling. 
 Define how we handle errors and which ones should be 
 server errors (ie 500) and which ones should be app errors (ie no config).
